@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:outing_project/screens/loginScreen.dart';
+import 'package:outing_project/screens/login_screen.dart';
 import 'package:outing_project/src/routes.dart';
 
 void main() {

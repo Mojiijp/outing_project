@@ -7,7 +7,7 @@ const Color subLabel = Color.fromRGBO(175, 175, 175, 1);
 const Color textButton = Color.fromRGBO(255, 255, 255, 1);
 const Color saveButton = Color.fromRGBO(3, 145, 81, 1);
 const Color cancelButton = Color.fromRGBO(246, 152, 125, 1);
-const Color background = Color.fromRGBO(18, 93, 32, 1);
+const Color background = Color(0xFFF2F9FF);
 const Color backgroundTitle = Color.fromRGBO(255, 203, 68, 1);
 const Color exitText = Color.fromRGBO(68, 193, 255, 1);
 
