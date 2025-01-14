@@ -14,6 +14,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    username.clear();
+    password.clear();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;
     double screenWidth = MediaQuery.sizeOf(context).width;
@@ -102,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     isObscured ? Icons.visibility : Icons.visibility_off,
-                    size: 25,
+                    size: iconSize,
                     color: Colors.teal.shade100,
                   ),
                   onPressed: () {
@@ -126,7 +134,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   colorButton: saveButton,
                   fontTextSize: fontButton,
                   onPressed: () {
-                    Get.toNamed('/home');
+                    if (!['admin', 'car1', 'car2', 'car3'].contains(username.text) ||
+                        !['admin', 'car1', 'car2', 'car3'].contains(password.text)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง",
+                                style: TextStyle(fontSize: fontInputText),
+                              )
+                          )
+                      );
+                    } else {
+                      Get.toNamed('/home');
+                    }
                   },
                 ),
                 ButtonWidget(

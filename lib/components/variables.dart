@@ -7,4 +7,4 @@ TextEditingController password = TextEditingController();
 FocusNode usernameFocus = FocusNode();
 FocusNode passwordFocus = FocusNode();
 
-bool isObscured = false;
+bool isObscured = true;
