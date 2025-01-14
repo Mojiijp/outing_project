@@ -12,7 +12,7 @@ class Routes {
   static const outingScreen = "/outing";
   static const checkInScreen = "/check-in";
   static const nightPartyScreen = "/night-party";
-  static const moreScreen = "/night-party";
+  static const moreScreen = "/more";
 
   static List<GetPage> getPageRoutes() {
     return [
