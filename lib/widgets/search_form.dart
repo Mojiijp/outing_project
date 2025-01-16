@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:outing_project/components/colors.dart';
 
-class InputField extends StatefulWidget {
+class SearchField extends StatefulWidget {
   final bool readOnly;
   final TextEditingController controller;
   final FocusNode focusNode;
   final TextInputAction? textInputAction;
-  final String label;
+  final TextInputType? keyboardType;
   final double fontText;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -18,13 +18,13 @@ class InputField extends StatefulWidget {
   final InputDecoration? decoration;
   final GestureTapCallback? onTap;
 
-  const InputField({
+  const SearchField({
     super.key,
     required this.readOnly,
     required this.controller,
     required this.focusNode,
     required this.textInputAction,
-    required this.label,
+    this.keyboardType,
     required this.fontText,
     required this.obscureText,
     this.prefixIcon,
@@ -33,14 +33,14 @@ class InputField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onChanged,
     this.decoration,
-    this.onTap
+    this.onTap,
   });
 
   @override
-  State<InputField> createState() => _InputFieldState();
+  State<SearchField> createState() => _SearchFieldState();
 }
 
-class _InputFieldState extends State<InputField> {
+class _SearchFieldState extends State<SearchField> {
   @override
   void initState() {
     super.initState();
@@ -63,9 +63,9 @@ class _InputFieldState extends State<InputField> {
       controller: widget.controller,
       focusNode: widget.focusNode,
       textInputAction: widget.textInputAction,
+      keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         isDense: true,
-        labelText: widget.label,
         labelStyle: TextStyle(
           fontSize: widget.fontText,
           color: widget.focusNode.hasFocus
@@ -83,7 +83,7 @@ class _InputFieldState extends State<InputField> {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Colors.grey.shade200,
+            color: Colors.grey,
             width: 1.0,
           ),
           borderRadius: BorderRadius.circular(10),
@@ -91,7 +91,9 @@ class _InputFieldState extends State<InputField> {
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
       ),
-      onTap: widget.onTap,
+      onTap: () {
+        if (widget.onTap != null) widget.onTap!();
+      },
       obscureText: widget.obscureText,
       onChanged: widget.onChanged,
       validator: widget.validator,

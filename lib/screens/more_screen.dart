@@ -12,7 +12,7 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Text("More SCREEN", style: TextStyle(fontSize: 60),),
+        body: Text("MORE SCREEN", style: TextStyle(fontSize: 60),),
       ),
     );
   }

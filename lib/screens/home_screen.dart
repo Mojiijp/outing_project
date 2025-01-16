@@ -137,6 +137,7 @@ class _HomescreenState extends State<Homescreen> {
 
 Widget gridViewDetail (double screenHeight, double screenWeight, String imagePath, String text, double fontText, Function()? onTap) {
   return InkWell(
+    onTap: onTap,
     child: Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -166,7 +167,6 @@ Widget gridViewDetail (double screenHeight, double screenWeight, String imagePat
           ),
         ],
       )
-    ),
-    onTap: onTap
+    )
   );
 }
