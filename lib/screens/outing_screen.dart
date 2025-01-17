@@ -2,6 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:outing_project/components/colors.dart';
 import 'package:outing_project/components/variables.dart';
+import 'package:outing_project/src/model/employee.dart';
+import 'package:outing_project/src/services/employee_service.dart';
 import 'package:outing_project/widgets/button.dart';
 import 'package:outing_project/widgets/input_form.dart';
 import 'package:outing_project/widgets/search_form.dart';
@@ -15,11 +17,38 @@ class OutingScreen extends StatefulWidget {
 }
 
 class _OutingScreenState extends State<OutingScreen> {
+  List<Employee>? employeeData;
+  List officeTalingChan = [];
+  List officeBanglen = [];
+
   final List<String> items = [
     'ตลิ่งชัน',
     'บางเลน'
   ];
   String? selectedValue;
+
+  void fetchEmployeeData() async {
+    var data = await EmployeeService.getAllEmployee();
+
+    setState(() {
+      employeeData = data;
+      officeTalingChan = data.where((employee) {
+        return employee.office == 'ตลิ่งชัน';
+      }).toList();
+      officeBanglen = data.where((employee) {
+        return employee.office == 'บางเลน';
+      }).toList();
+      print(officeTalingChan.length);
+      print(officeBanglen.length);
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchEmployeeData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +337,7 @@ class _OutingScreenState extends State<OutingScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, bottom: 5),
                           child: Text(
-                            "ลงทะเบียนแล้ว 5 / 10 คน",
+                            "ลงทะเบียนแล้ว 5 / ${officeTalingChan.length} คน",
                             style: TextStyle(
                                 fontSize: fontSubTitle,
                                 fontWeight: FontWeight.w500
@@ -341,7 +370,8 @@ class _OutingScreenState extends State<OutingScreen> {
                         children: [
                           Expanded(
                             child: FittedBox(
-                              child: DataTable(
+                              child: employeeData != null ?
+                              DataTable(
                                 headingRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade100),
                                 dataRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade50.withOpacity(0.5)),
                                 horizontalMargin: 10,
@@ -402,13 +432,33 @@ class _OutingScreenState extends State<OutingScreen> {
                                     ),
                                   ),
                                 ],
-                                rows: <DataRow>[
-                                  DataRow(
+                                rows: officeTalingChan.map((row) {
+                                  return DataRow(
                                     cells: <DataCell>[
                                       DataCell(
                                           Center(
                                             child: Text(
-                                              '660143',
+                                              row.code,
+                                              style: TextStyle(
+                                                  fontSize: fontData
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                      DataCell(
+                                          Text(
+                                            row.name,
+                                            softWrap: true,
+                                            style: TextStyle(
+                                                fontSize: fontData
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          )
+                                      ),
+                                      DataCell(
+                                          Center(
+                                            child: Text(
+                                              row.nickName,
                                               style: TextStyle(
                                                   fontSize: fontData
                                               ),
@@ -418,28 +468,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                       DataCell(
                                           Center(
                                             child: Text(
-                                              'พงศกร พันธุ์บุตรดี',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เดียร์',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'Software',
+                                              row.jobDepartment,
                                               style: TextStyle(
                                                   fontSize: fontData
                                               ),
@@ -461,186 +490,13 @@ class _OutingScreenState extends State<OutingScreen> {
                                           )
                                       ),
                                     ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660143',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'พงศกร พันธุ์บุตรดี',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เดียร์',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'Software',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660143',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'พงศกร พันธุ์บุตรดี',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เดียร์',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'Software',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660143',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'พงศกร พันธุ์บุตรดี',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เดียร์',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'Software',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                  );
+                                }).toList()
+                              )
+                              : SizedBox(
+                                  width : screenWidth / 2,
+                                  height: screenHeight / 12,
+                                  child: CircularProgressIndicator())
                             ),
                           ),
                         ],
@@ -665,7 +521,7 @@ class _OutingScreenState extends State<OutingScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, bottom: 5),
                           child: Text(
-                            "ลงทะเบียนแล้ว 5 / 10 คน",
+                            "ลงทะเบียนแล้ว 5 / ${officeBanglen.length} คน",
                             style: TextStyle(
                                 fontSize: fontSubTitle,
                                 fontWeight: FontWeight.w500
@@ -698,548 +554,133 @@ class _OutingScreenState extends State<OutingScreen> {
                         children: [
                           Expanded(
                             child: FittedBox(
-                              child: DataTable(
-                                headingRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade100),
-                                dataRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade50.withOpacity(0.5)),
-                                horizontalMargin: 10,
-                                columnSpacing: 30,
-                                border: TableBorder.all(
-                                  color: Colors.grey.shade300,
-                                  width: 1,
-                                ),
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'รหัส',
-                                          style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                child: employeeData != null ?
+                                DataTable(
+                                    headingRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade100),
+                                    dataRowColor: WidgetStateProperty.resolveWith((states) => Colors.teal.shade50.withOpacity(0.5)),
+                                    horizontalMargin: 10,
+                                    columnSpacing: 30,
+                                    border: TableBorder.all(
+                                      color: Colors.grey.shade300,
+                                      width: 1,
+                                    ),
+                                    columns: <DataColumn>[
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'รหัส',
+                                              style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'ชื่อ-นามสกุล',
-                                          style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'ชื่อ-นามสกุล',
+                                              style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'ชื่อเล่น',
-                                          style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'ชื่อเล่น',
+                                              style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'แผนก',
-                                          style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'แผนก',
+                                              style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'สถานะ',
-                                          style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Center(
+                                            child: Text(
+                                              'สถานะ',
+                                              style: TextStyle(fontSize: fontData, fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                                rows: <DataRow>[
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
                                     ],
-                                    color: WidgetStateProperty.resolveWith<Color?>(
-                                          (states) {
-                                        return Colors.yellow.shade200; // เปลี่ยนสีพื้นหลังถ้าตรงกับคำค้นหา
-                                      },
-                                    ),
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
+                                    rows: officeBanglen.map((row) {
+                                      return DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(
+                                              Center(
+                                                child: Text(
+                                                  row.code,
+                                                  style: TextStyle(
+                                                      fontSize: fontData
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
+                                              )
+                                          ),
+                                          DataCell(
+                                              Text(
+                                                row.name,
+                                                softWrap: true,
                                                 style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
+                                                    fontSize: fontData
                                                 ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
+                                                textAlign: TextAlign.start,
+                                              )
+                                          ),
+                                          DataCell(
+                                              Center(
+                                                child: Text(
+                                                  row.nickName,
+                                                  style: TextStyle(
+                                                      fontSize: fontData
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
+                                              )
+                                          ),
+                                          DataCell(
+                                              Center(
+                                                child: Text(
+                                                  row.jobDepartment,
+                                                  style: TextStyle(
+                                                      fontSize: fontData
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
+                                              )
+                                          ),
+                                          DataCell(
+                                              InkWell(
+                                                child: Center(
+                                                  child: Text(
+                                                    'ลงทะเบียน',
+                                                    style: TextStyle(
+                                                        fontSize: fontData,
+                                                        color: dataButton
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              '660100',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'ชาติชาย ชัยมั่นคง',
-                                              softWrap: true,
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'เบิร์ด',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          Center(
-                                            child: Text(
-                                              'บัญชี',
-                                              style: TextStyle(
-                                                  fontSize: fontData
-                                              ),
-                                            ),
-                                          )
-                                      ),
-                                      DataCell(
-                                          InkWell(
-                                            child: Center(
-                                              child: Text(
-                                                'ลงทะเบียน',
-                                                style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: dataButton
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {},
-                                          )
-                                      ),
-                                    ],
-                                  ),
-
-                                ],
-                              ),
+                                                onTap: () {},
+                                              )
+                                          ),
+                                        ],
+                                      );
+                                    }).toList()
+                                )
+                                    : SizedBox(
+                                    width : screenWidth / 2,
+                                    height: screenHeight / 12,
+                                    child: CircularProgressIndicator())
                             ),
                           ),
                         ],
