@@ -42,24 +42,9 @@ class SearchField extends StatefulWidget {
 
 class _SearchFieldState extends State<SearchField> {
   @override
-  void initState() {
-    super.initState();
-    widget.focusNode.addListener(() {
-      setState(() {});
-    });
-  }
-
-  @override
-  void dispose() {
-    widget.focusNode.removeListener(() {});
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return TextFormField(
       style: TextStyle(fontSize: widget.fontText, color: Colors.black),
-      readOnly: widget.readOnly,
       controller: widget.controller,
       focusNode: widget.focusNode,
       textInputAction: widget.textInputAction,

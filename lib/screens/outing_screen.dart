@@ -5,9 +5,8 @@ import 'package:outing_project/components/variables.dart';
 import 'package:outing_project/src/model/employee.dart';
 import 'package:outing_project/src/services/employee_service.dart';
 import 'package:outing_project/widgets/button.dart';
-import 'package:outing_project/widgets/input_form.dart';
 import 'package:outing_project/widgets/search_form.dart';
-import 'package:outing_project/widgets/search_form.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class OutingScreen extends StatefulWidget {
   const OutingScreen({super.key});
@@ -18,8 +17,14 @@ class OutingScreen extends StatefulWidget {
 
 class _OutingScreenState extends State<OutingScreen> {
   List<Employee>? employeeData;
-  List officeTalingChan = [];
+  List officeTaLingChan = [];
   List officeBanglen = [];
+  int registerTalingchan = 0;
+  int registerBanglen = 0;
+
+  String? searchedEmployeeCode;
+
+  BarcodeViewController? controller;
 
   final List<String> items = [
     'ตลิ่งชัน',
@@ -32,17 +37,31 @@ class _OutingScreenState extends State<OutingScreen> {
 
     setState(() {
       employeeData = data;
-      officeTalingChan = data.where((employee) {
+
+      officeTaLingChan = data.where((employee) {
         return employee.office == 'ตลิ่งชัน';
       }).toList();
+
+      registerTalingchan = officeTaLingChan.where((register) {
+        return register.statusRegister == true;
+      }).length;
+
       officeBanglen = data.where((employee) {
         return employee.office == 'บางเลน';
       }).toList();
-      print(officeTalingChan.length);
-      print(officeBanglen.length);
+
+      registerBanglen = officeBanglen.where((register) {
+        return register.statusRegister == true;
+      }).length;
     });
   }
 
+  List getSearchDataTaLingChan(String employeeCode, String name) {
+    return officeTaLingChan.where((row) {
+      return row.code.contains(employeeCode) ||  // กรองตามรหัส
+          row.name.contains(name); // กรองตามชื่อเล่น
+    }).toList();
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -256,7 +275,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                 ),
                                 SizedBox(
                                   height: screenHeight / 20,
-                                  width: screenWidth / 1.55,
+                                  width: screenWidth / 1.93,
                                   child: SearchField(
                                     readOnly: false,
                                     controller: name,
@@ -269,16 +288,55 @@ class _OutingScreenState extends State<OutingScreen> {
                               ],
                             ),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "",
+                                  style: TextStyle(
+                                      fontSize: fontSubTitle,
+                                      fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: buttonCamera,
+                                  foregroundColor: buttonCamera,
+                                  radius: 20,
+                                  child: IconButton(
+                                      onPressed: () async {
+                                        String? res = await SimpleBarcodeScanner.scanBarcode(
+                                          context,
+                                          barcodeAppBar: const BarcodeAppBar(
+                                            appBarTitle: 'Test',
+                                            centerTitle: false,
+                                            enableBackButton: true,
+                                            backButtonIcon: Icon(Icons.arrow_back_ios),
+                                          ),
+                                          isShowFlashIcon: true,
+                                          delayMillis: 500,
+                                          cameraFace: CameraFace.back,
+                                          scanFormat: ScanFormat.ONLY_BARCODE,
+                                        );
+                                        setState(() {
+                                          txtBarcode = res as String;
+                                          print('barcode : $txtBarcode');
+                                        });
+                                      },
+                                      icon: Icon(Icons.qr_code_scanner, color: Colors.black,)
+                                  ),
+                                )
+                              ],
+                            ),
+                            Column(
                               children: [
                                 Text('', style: TextStyle(fontSize: fontSubTitle),),
                                 ButtonWidget(
                                   height: screenHeight / 20,
-                                  width: screenWidth / 4,
+                                  width: screenWidth / 4.5,
                                   text: 'ค้นหา',
                                   colorText: Colors.white,
                                   colorButton: saveButton,
                                   fontTextSize: fontSubTitle,
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if(selectedValue == null || selectedValue == '') {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
@@ -288,18 +346,18 @@ class _OutingScreenState extends State<OutingScreen> {
                                           )
                                         )
                                       );
-                                    } else if ((employeeCode.text == '' || employeeCode.text.isEmpty) ||
-                                        (name.text == '' || name.text.isEmpty) ) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                "กรุณากรอกรหัสหรือชื่อพนักงาน",
-                                                style: TextStyle(fontSize: fontInputText),
-                                              )
-                                          )
-                                      );
                                     } else {
-
+                                      getSearchDataTaLingChan(employeeCode.text, name.text);
+                                      // filterData();
+                                      // var result = await EmployeeService.searchEmployee(
+                                      //     employeeCode.text,
+                                      //     name.text,
+                                      //     selectedValue!
+                                      // );
+                                      // if(result.isNotEmpty) {
+                                      //   searchedEmployeeCode = result[0]['รหัสพนักงาน'].toString();
+                                      //   fetchEmployeeData();
+                                      // }
                                     }
                                   },
                                 ),
@@ -337,7 +395,7 @@ class _OutingScreenState extends State<OutingScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, bottom: 5),
                           child: Text(
-                            "ลงทะเบียนแล้ว 5 / ${officeTalingChan.length} คน",
+                            "ลงทะเบียนแล้ว $registerTalingchan / ${officeTaLingChan.length} คน",
                             style: TextStyle(
                                 fontSize: fontSubTitle,
                                 fontWeight: FontWeight.w500
@@ -432,8 +490,13 @@ class _OutingScreenState extends State<OutingScreen> {
                                     ),
                                   ),
                                 ],
-                                rows: officeTalingChan.map((row) {
+                                rows: officeTaLingChan.map((row) {
+                                  bool isHighlighted = searchedEmployeeCode == row.code;
+
                                   return DataRow(
+                                    color: WidgetStateProperty.resolveWith(
+                                          (states) => isHighlighted ? Colors.yellow.shade200 : Colors.transparent,
+                                    ),
                                     cells: <DataCell>[
                                       DataCell(
                                           Center(
@@ -479,14 +542,21 @@ class _OutingScreenState extends State<OutingScreen> {
                                           InkWell(
                                             child: Center(
                                               child: Text(
-                                                'ลงทะเบียน',
+                                                row.statusRegister == false
+                                                    ? 'ลงทะเบียน'
+                                                    : 'เสร็จสิ้น',
                                                 style: TextStyle(
                                                     fontSize: fontData,
-                                                    color: dataButton
+                                                    color: row.statusRegister == false
+                                                        ? dataButton
+                                                        : success
                                                 ),
                                               ),
                                             ),
-                                            onTap: () {},
+                                            onTap: () async {
+                                              await EmployeeService.registerEmployee(row.code);
+                                              fetchEmployeeData();
+                                            },
                                           )
                                       ),
                                     ],
@@ -521,7 +591,7 @@ class _OutingScreenState extends State<OutingScreen> {
                         Padding(
                           padding: const EdgeInsets.only(left: 20, bottom: 5),
                           child: Text(
-                            "ลงทะเบียนแล้ว 5 / ${officeBanglen.length} คน",
+                            "ลงทะเบียนแล้ว $registerBanglen / ${officeBanglen.length} คน",
                             style: TextStyle(
                                 fontSize: fontSubTitle,
                                 fontWeight: FontWeight.w500
@@ -660,18 +730,25 @@ class _OutingScreenState extends State<OutingScreen> {
                                               )
                                           ),
                                           DataCell(
-                                              InkWell(
-                                                child: Center(
-                                                  child: Text(
-                                                    'ลงทะเบียน',
-                                                    style: TextStyle(
-                                                        fontSize: fontData,
-                                                        color: dataButton
-                                                    ),
+                                            InkWell(
+                                              child: Center(
+                                                child: Text(
+                                                  row.statusRegister == false
+                                                      ? 'ลงทะเบียน'
+                                                      : 'เสร็จสิ้น',
+                                                  style: TextStyle(
+                                                      fontSize: fontData,
+                                                      color: row.statusRegister == false
+                                                          ? dataButton
+                                                          : success
                                                   ),
                                                 ),
-                                                onTap: () {},
-                                              )
+                                              ),
+                                              onTap: () async {
+                                                await EmployeeService.registerEmployee(row.code);
+                                                fetchEmployeeData();
+                                              },
+                                            )
                                           ),
                                         ],
                                       );

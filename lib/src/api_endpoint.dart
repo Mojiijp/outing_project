@@ -6,4 +6,6 @@ class ApiEndPoints {
 
 class _AuthEndPoints {
   final String allEmployee = "/employee";
+  final String employeeSearch = "/employee/search";
+  final String registerEmployee = "/register/";
 }

@@ -8,11 +8,12 @@ const Color textButton = Color.fromRGBO(255, 255, 255, 1);
 const Color saveButton = Color.fromRGBO(3, 145, 81, 1);
 const Color cancelButton = Color.fromRGBO(246, 152, 125, 1);
 const Color background = Color(0xFFF2F9FF);
-const Color backgroundTitle = Color.fromRGBO(255, 203, 68, 1);
+const Color buttonCamera = Color.fromRGBO(255, 203, 68, 1);
 const Color exitText = Color.fromRGBO(68, 193, 255, 1);
 const Color backgroundAppbar = Color(0xFFC4D9FF);
 const Color dataButton = Color(0xFFF72C5B);
 const Color hideData = Color(0xFF3D3BF3);
+const Color success = Color(0xFF5CB338);
 
 // Color cancelButton = Color.fromRGBO(238, 78, 78, 1);
 // Color homeAppbarTitle = Color.fromRGBO(238, 78, 78, 1);

@@ -148,7 +148,7 @@ Widget gridViewDetail (double screenHeight, double screenWeight, String imagePat
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SizedBox(
-            height: screenHeight / 7,
+            height: screenHeight / 8,
             width: screenWeight,
             child: Image(
               image: AssetImage(
