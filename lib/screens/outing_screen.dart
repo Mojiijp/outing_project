@@ -22,6 +22,8 @@ class _OutingScreenState extends State<OutingScreen> {
   List<Employee>? employeeData;
   List officeTaLingChan = [];
   List officeBanglen = [];
+  List lengthOfficeTaLingChan = [];
+  List lengthOfficeBanglen = [];
   int registerTalingchan = 0;
   int registerBanglen = 0;
 
@@ -55,11 +57,30 @@ class _OutingScreenState extends State<OutingScreen> {
     });
   }
 
+  void empNotRegisData() {
+    setState(() {
+      var filteredData = employeeData!.where((employee) {
+        return employee.outingStatus == false;
+      }).toList();
+
+      // อัปเดตข้อมูลที่กรองแล้ว
+      officeTaLingChan = filteredData.where((employee) => employee.office == 'ตลิ่งชัน').toList();
+      officeBanglen = filteredData.where((employee) => employee.office == 'บางเลน').toList();
+
+      // ไฮไลต์แถวแรกที่ตรงกับผลการค้นหา
+      // if (filteredData.isNotEmpty) {
+      //   searchedEmployeeCode = filteredData[0].code;
+      // }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     // เริ่มต้นสถานะกำลังโหลด
     isLoading = true;
+    isVisibleTalingChan = true;
+    isVisibleBangLen = true;
 
     Future.delayed(Duration(milliseconds: 100), () {
       fetchEmployeeData();
@@ -71,19 +92,60 @@ class _OutingScreenState extends State<OutingScreen> {
     var data = await EmployeeService.getAllEmployee();
     setState(() {
       employeeData = data;
+      lengthOfficeTaLingChan =
+          data.where((employee) => employee.office == 'ตลิ่งชัน').toList();
+      lengthOfficeBanglen =
+          data.where((employee) => employee.office == 'บางเลน').toList();
       officeTaLingChan =
           data.where((employee) => employee.office == 'ตลิ่งชัน').toList();
       registerTalingchan = officeTaLingChan
-          .where((register) => register.statusRegister == true)
+          .where((register) => register.outingStatus == true)
           .length;
       officeBanglen =
           data.where((employee) => employee.office == 'บางเลน').toList();
       registerBanglen = officeBanglen
-          .where((register) => register.statusRegister == true)
+          .where((register) => register.outingStatus == true)
           .length;
 
       isLoading = false; // หยุดสถานะกำลังโหลด
     });
+  }
+
+  Future<void> dialogNotRegister(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Basic dialog title'),
+          content: const Text(
+            'A dialog is a type of modal window that\n'
+                'appears in front of app content to\n'
+                'provide critical information, or prompt\n'
+                'for a decision to be made.',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Disable'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Enable'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -199,6 +261,13 @@ class _OutingScreenState extends State<OutingScreen> {
                                         onChanged: (value) {
                                           setState(() {
                                             selectedValue = value;
+                                            if(selectedValue == 'ตลิ่งชัน') {
+                                              isVisibleTalingChan = true;
+                                              isVisibleBangLen = false;
+                                            } else {
+                                              isVisibleTalingChan = false;
+                                              isVisibleBangLen = true;
+                                            }
                                           });
                                         },
                                         buttonStyleData: ButtonStyleData(
@@ -275,6 +344,9 @@ class _OutingScreenState extends State<OutingScreen> {
                                       keyboardType: TextInputType.number,
                                       fontText: fontInputText,
                                       obscureText: false,
+                                      onChanged: (val) {
+                                        searchEmployeeData();
+                                      },
                                     ),
                                   ),
                                 ],
@@ -304,6 +376,9 @@ class _OutingScreenState extends State<OutingScreen> {
                                       keyboardType: TextInputType.text,
                                       fontText: fontInputText,
                                       obscureText: false,
+                                      onChanged: (val) {
+                                        searchEmployeeData();
+                                      }
                                     ),
                                   ),
                                 ],
@@ -342,6 +417,22 @@ class _OutingScreenState extends State<OutingScreen> {
                                           setState(() {
                                             txtBarcode = res as String;
                                             print('barcode : $txtBarcode');
+                                            if(employeeData!.where((employee) {
+                                              return employee.barcode.contains(txtBarcode);
+                                            }).toList().isNotEmpty) {
+                                              employeeCode.text = txtBarcode;
+                                              searchEmployeeData();
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                        "ไม่พบข้อมูล",
+                                                        style: TextStyle(fontSize: fontInputText),
+                                                      )
+                                                  )
+                                              );
+                                            }
+
                                           });
                                         },
                                         icon: Icon(
@@ -410,13 +501,18 @@ class _OutingScreenState extends State<OutingScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, bottom: 5),
-                            child: Text(
-                              "ลงทะเบียนแล้ว $registerTalingchan / ${officeTaLingChan.length} คน",
-                              style: TextStyle(
-                                  fontSize: fontSubTitle,
-                                  fontWeight: FontWeight.w500),
+                          InkWell(
+                            onTap: () {
+                              empNotRegisData();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20, bottom: 5),
+                              child: Text(
+                                "ลงทะเบียนแล้ว $registerTalingchan / ${lengthOfficeTaLingChan.length} คน",
+                                style: TextStyle(
+                                    fontSize: fontSubTitle,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           Padding(
@@ -447,8 +543,7 @@ class _OutingScreenState extends State<OutingScreen> {
                               child: employeeData == null
                                   ? Center(
                                       child: SizedBox(
-                                        width:
-                                            50, // ขนาดของ CircularProgressIndicator
+                                        width: 50,
                                         height: 50,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 4, // ลดความหนาของเส้น
@@ -467,8 +562,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                                     Colors.teal.shade100),
                                         dataRowColor:
                                             WidgetStateProperty.resolveWith(
-                                                (states) => Colors.teal.shade50
-                                                    .withOpacity(0.5)),
+                                                (states) => Colors.teal.shade50),
                                         horizontalMargin: 10,
                                         columnSpacing: 30,
                                         border: TableBorder.all(
@@ -575,7 +669,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                               DataCell(
                                                 Center(
                                                   child: Text(
-                                                    row.nickName,
+                                                    row.nickname,
                                                     style: TextStyle(
                                                         fontSize: fontData),
                                                   ),
@@ -584,7 +678,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                               DataCell(
                                                 Center(
                                                   child: Text(
-                                                    row.jobDepartment,
+                                                    row.department,
                                                     style: TextStyle(
                                                         fontSize: fontData),
                                                   ),
@@ -594,14 +688,14 @@ class _OutingScreenState extends State<OutingScreen> {
                                                 InkWell(
                                                   child: Center(
                                                     child: Text(
-                                                      row.statusRegister ==
+                                                      row.outingStatus ==
                                                               false
                                                           ? 'ลงทะเบียน'
                                                           : 'เสร็จสิ้น',
                                                       style: TextStyle(
                                                         fontSize: fontData,
                                                         color:
-                                                            row.statusRegister ==
+                                                            row.outingStatus ==
                                                                     false
                                                                 ? dataButton
                                                                 : success,
@@ -613,6 +707,8 @@ class _OutingScreenState extends State<OutingScreen> {
                                                         .registerEmployee(
                                                             row.code);
                                                     fetchEmployeeData();
+                                                    employeeCode.clear();
+                                                    name.clear();
                                                   },
                                                 ),
                                               ),
@@ -639,13 +735,18 @@ class _OutingScreenState extends State<OutingScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, bottom: 5),
-                            child: Text(
-                              "ลงทะเบียนแล้ว $registerBanglen / ${officeBanglen.length} คน",
-                              style: TextStyle(
-                                  fontSize: fontSubTitle,
-                                  fontWeight: FontWeight.w500),
+                          InkWell(
+                            onTap: () {
+                              empNotRegisData();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20, bottom: 5),
+                              child: Text(
+                                "ลงทะเบียนแล้ว $registerBanglen / ${lengthOfficeBanglen.length} คน",
+                                style: TextStyle(
+                                    fontSize: fontSubTitle,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           Padding(
@@ -807,14 +908,14 @@ class _OutingScreenState extends State<OutingScreen> {
                                                     )),
                                                     DataCell(Center(
                                                       child: Text(
-                                                        row.nickName,
+                                                        row.nickname,
                                                         style: TextStyle(
                                                             fontSize: fontData),
                                                       ),
                                                     )),
                                                     DataCell(Center(
                                                       child: Text(
-                                                        row.jobDepartment,
+                                                        row.department,
                                                         style: TextStyle(
                                                             fontSize: fontData),
                                                       ),
@@ -822,14 +923,14 @@ class _OutingScreenState extends State<OutingScreen> {
                                                     DataCell(InkWell(
                                                       child: Center(
                                                         child: Text(
-                                                          row.statusRegister ==
+                                                          row.outingStatus ==
                                                                   false
                                                               ? 'ลงทะเบียน'
                                                               : 'เสร็จสิ้น',
                                                           style: TextStyle(
                                                               fontSize:
                                                                   fontData,
-                                                              color: row.statusRegister ==
+                                                              color: row.outingStatus ==
                                                                       false
                                                                   ? dataButton
                                                                   : success),
@@ -840,6 +941,8 @@ class _OutingScreenState extends State<OutingScreen> {
                                                             .registerEmployee(
                                                                 row.code);
                                                         fetchEmployeeData();
+                                                        employeeCode.clear();
+                                                        name.clear();
                                                       },
                                                     )),
                                                   ],
@@ -873,7 +976,8 @@ class _OutingScreenState extends State<OutingScreen> {
                 ),
               ),
             ],
-          )),
+          )
+      ),
     );
   }
 }

@@ -2,44 +2,55 @@ class Employee {
   String code;
   String barcode;
   String name;
-  String nickName;
-  String jobPosition;
-  String jobDepartment;
+  String nickname;
+  String position;
+  String department;
   String color;
-  String carNo;
-  bool statusRegister;
+  String car;
   String office;
-  bool rewardOnSite;
-  bool rewardInSite;
+  bool outingStatus;
+  bool flagGift;
+  bool flagReward;
+  bool checkIn;
+  bool nightParty;
+  String gift;
+  bool rewards;
 
   Employee({
     required this.code,
     required this.barcode,
     required this.name,
-    required this.nickName,
-    required this.jobPosition,
-    required this.jobDepartment,
+    required this.nickname,
+    required this.position,
+    required this.department,
     required this.color,
-    required this.carNo,
-    required this.statusRegister,
+    required this.car,
     required this.office,
-    required this.rewardOnSite,
-    required this.rewardInSite
+    required this.outingStatus,
+    required this.flagGift,
+    required this.flagReward,
+    required this.checkIn,
+    required this.nightParty,
+    required this.gift,
+    required this.rewards
   });
 
   factory Employee.fromJSON(Map<String, dynamic> json) => Employee(
-      code: json['รหัสพนักงาน'] ?? '',
-      barcode: json['รหัสบาร์โค้ด'] ?? '',
-      name: json['ชื่อนามสกุล'] ?? '',
-      nickName: json['ชื่อเล่น'] ?? '',
-      jobPosition: json['ตำแหน่ง'] ?? '',
-      jobDepartment: json['แผนก'] ?? '',
-      color: json['ประจำสี'] ?? '',
-      carNo: json['รถคันที่'] ?? '',
-      statusRegister: json['สถานะเข้าร่วม'] ?? false,
-      office: json['สำนักงาน'] ?? '',
-      rewardOnSite: json['รางวัลหน้างาน'] ?? false,
-      rewardInSite: json['รางวัลในงาน'] ?? false
+    code: json['emp_code'] ?? '',
+    barcode: json['barcode'] ?? '',
+    name: json['emp_name'] ?? '',
+    nickname: json['nickname'] ?? '',
+    position: json['position'] ?? '',
+    department: json['department'] ?? '',
+    color: json['color'] ?? '',
+    car: json['car'] ?? '',
+    office: json['office'] ?? '',
+    outingStatus: json['outing_status'] ?? false,
+    flagGift: json['flag_gift'] ?? false,
+    flagReward: json['flag_reward'] ?? false,
+    checkIn: json['check_in'] ?? false,
+    nightParty: json['nightparty'] ?? false,
+    gift: json['gift'] ?? '',
+    rewards: json['rewards'] ?? false,
   );
-
 }

@@ -7,11 +7,13 @@ TextEditingController username = TextEditingController();
 TextEditingController password = TextEditingController();
 TextEditingController employeeCode = TextEditingController();
 TextEditingController name = TextEditingController();
+TextEditingController barcode = TextEditingController();
 
 FocusNode usernameFocus = FocusNode();
 FocusNode passwordFocus = FocusNode();
 FocusNode employeeCodeFocus = FocusNode();
 FocusNode nameFocus = FocusNode();
+FocusNode barcodeFocus = FocusNode();
 
 bool isObscured = true;
 bool isVisibleTalingChan = true;
