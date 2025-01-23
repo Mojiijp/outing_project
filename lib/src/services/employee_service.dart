@@ -27,49 +27,6 @@ class EmployeeService {
     return result;
   }
 
-  // static Future searchEmployee(
-  //     String employeeID,
-  //     String nameEmployee,
-  //     String jobDepartment,
-  //     ) async {
-  //
-  //   final Map<String, dynamic> searchData = {
-  //     'รหัสพนักงาน': employeeID,
-  //     'ชื่อนามสกุล': nameEmployee,
-  //     'สำนักงาน': jobDepartment,
-  //   };
-  //   try {
-  //     // ตรวจสอบข้อมูลก่อนส่ง
-  //     print('Before sending data : ${jsonEncode(searchData)}');
-  //
-  //     final response = await http.post(
-  //       Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.authEndPoints.employeeSearch),
-  //       body: json.encode(searchData),
-  //       headers: {'Content-Type': 'application/json'},
-  //     );
-  //
-  //     print(response.statusCode);
-  //
-  //     if (response.statusCode == 200) {
-  //       if (response.body.isNotEmpty &&
-  //           response.headers['content-type']?.contains('application/json') ==
-  //               true) {
-  //         print('${jsonDecode(response.body)}');
-  //         return jsonDecode(response.body);
-  //       } else {
-  //         throw Exception("Response body is not valid JSON.");
-  //       }
-  //     } else {
-  //       print('Error response body: ${response.body}');
-  //       throw Exception(
-  //           "Failed to send data. Status Code: ${response.statusCode}");
-  //     }
-  //   } catch (e) {
-  //     print("Error: $e");
-  //     return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
-  //   }
-  // }
-
   static Future<Map<String, dynamic>> registerEmployee(String code) async {
     try {
       print('Before sending data: ${jsonEncode(code)}');
@@ -91,4 +48,30 @@ class EmployeeService {
       return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
     }
   }
+
+  static Future<Map<String, dynamic>> checkInEmployee(String code) async {
+    try {
+      print('Before sending data: ${jsonEncode(code)}');
+
+      final response = await http.put(
+        Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.checkInEmployee + code),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('check in success');
+        print(jsonDecode(response.body) as Map<String, dynamic>);
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        print('Error response body: ${response.body}');
+        throw Exception(
+            "Failed to send data. Status Code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+      return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
+    }
+  }
+
+
 }

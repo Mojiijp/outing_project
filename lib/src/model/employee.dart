@@ -48,7 +48,7 @@ class Employee {
     outingStatus: json['outing_status'] ?? false,
     flagGift: json['flag_gift'] ?? false,
     flagReward: json['flag_reward'] ?? false,
-    checkIn: json['check_in'] ?? false,
+    checkIn: json['checkin'] ?? false,
     nightParty: json['nightparty'] ?? false,
     gift: json['gift'] ?? '',
     rewards: json['rewards'] ?? false,

@@ -13,6 +13,15 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    username.clear();
+    password.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.sizeOf(context).height;

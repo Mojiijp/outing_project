@@ -412,7 +412,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                             isShowFlashIcon: true,
                                             delayMillis: 500,
                                             cameraFace: CameraFace.back,
-                                            scanFormat: ScanFormat.ONLY_BARCODE,
+                                            scanFormat: ScanFormat.ALL_FORMATS,
                                           );
                                           setState(() {
                                             txtBarcode = res as String;

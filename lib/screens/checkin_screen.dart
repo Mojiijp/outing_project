@@ -16,7 +16,6 @@ class CheckInScreen extends StatefulWidget {
 }
 
 class _CheckInScreenState extends State<CheckInScreen> {
-  List<String> items = ['คันที่ 1', 'คันที่ 2', 'คันที่ 3', 'Mini bus'];
   List car1 = [];
   List car2 = [];
   List car3 = [];
@@ -25,26 +24,80 @@ class _CheckInScreenState extends State<CheckInScreen> {
   List<Employee>? employeeData;
 
   String? selectedValue;
+  String carNo = '';
 
   void fetchEmployeeData() async {
     // ดึงข้อมูลพนักงานทั้งหมดจาก API
     var data = await EmployeeService.getAllEmployee();
+
     setState(() {
       employeeData = data;
-      print(employeeData);
-      car1 = data.where((employee) => employee.car == 'คันที่ 1').toList();
-      car2 = data.where((employee) => employee.car == 'คันที่ 2').toList();
-      car3 = data.where((employee) => employee.car == 'คันที่ 3').toList();
-      car4 = data.where((employee) => employee.car == 'Mini Bus').toList();
-      // registerTalingchan = officeTaLingChan
-      //     .where((register) => register.outingStatus == true)
-      //     .length;
 
-      // registerBanglen = officeBanglen
-      //     .where((register) => register.outingStatus == true)
-      //     .length;
-      // isLoading = false; // หยุดสถานะกำลังโหลด
+      switch (username.text) {
+        case 'car1':
+          car1 = data.where((employee) => employee.car == 'คันที่ 1').toList();
+          break;
+
+        case 'car2':
+          car2 = data.where((employee) => employee.car == 'คันที่ 2').toList();
+          break;
+
+        case 'car3':
+          car3 = data.where((employee) => employee.car == 'คันที่ 3').toList();
+          break;
+
+        case 'car4':
+          car4 = data.where((employee) => employee.car == 'Mini Bus').toList();
+          break;
+
+        default: print('Username does not match any car');
+      }
     });
+  }
+
+  String getCarNoFromUsername(String username) {
+    switch(username) {
+      case 'car1':
+        return 'คันที่ 1';  // Example car number for 'car1'
+      case 'car2':
+        return 'คันที่ 2';  // Example car number for 'car2'
+      case 'car3':
+        return 'คันที่ 3';
+      case 'car4':
+        return 'Mini Bus';  // Example car number for 'car3'
+      default:
+        return 'คันที่ 1'; // Return 'Unknown' if username doesn't match any case
+    }
+  }
+
+  int getCheckIn() {
+    switch (username.text) {
+      case 'car1':
+        return car1.where((register) => register.checkIn == true).length;
+      case 'car2':
+        return car2.where((register) => register.checkIn == true).length;
+      case 'car3':
+        return car3.where((register) => register.checkIn == true).length;
+      case 'car4':
+        return car4.where((register) => register.checkIn == true).length;
+      default:
+        return 0;  // Return 0 if the username doesn't match any car
+    }
+  }
+
+  int getAllEmployeeInCar() {
+    switch (username.text) {
+      case 'car1':
+        return car1.where((register) => register.car == 'คันที่ 1').length;
+      case 'car2':
+        return car2.where((register) => register.car == 'คันที่ 2').length;
+      case 'car3':
+        return car3.where((register) => register.car == 'คันที่ 3').length;
+      case 'car4':
+        return car4.where((register) => register.car == 'Mini Bus').length;
+      default:
+        return car1.where((register) => register.car == 'คันที่ 1').length; // Return 0 if the username doesn't match any car
+    }
   }
 
   @override
@@ -52,8 +105,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
     // TODO: implement initState
     super.initState();
     fetchEmployeeData();
+    employeeCode.clear();
+    barcode.clear();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -125,106 +179,20 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                     ],
                                   ),
                                   SizedBox(
+                                    height: screenHeight / 20,
                                     width: screenWidth / 5,
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton2<String>(
-                                        isExpanded: true,
-                                        hint: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                'คันที่ 1',
-                                                style: TextStyle(
-                                                  fontSize: fontDropdown,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: subHeader,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        items: items
-                                            .map((String item) =>
-                                            DropdownMenuItem<String>(
-                                              value: item,
-                                              child: Text(
-                                                item,
-                                                style: TextStyle(
-                                                  fontSize: fontDropdown,
-                                                  fontWeight:
-                                                  FontWeight.bold,
-                                                  color: Colors.black,
-                                                ),
-                                                overflow:
-                                                TextOverflow.ellipsis,
-                                              ),
-                                            ))
-                                            .toList(),
-                                        value: selectedValue,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedValue = value;
-
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: screenHeight / 20,
-                                          width: screenWidth / 3,
-                                          padding: const EdgeInsets.only(
-                                              left: 14, right: 14),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(14),
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            color: Colors.white,
-                                          ),
-                                          elevation: 2,
-                                        ),
-                                        iconStyleData: IconStyleData(
-                                          icon: Icon(
-                                            Icons.keyboard_arrow_down_outlined,
-                                          ),
-                                          iconSize: fontDropdown,
-                                          iconEnabledColor: Colors.black,
-                                          iconDisabledColor: Colors.grey,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 200,
-                                          width: screenWidth / 3,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(14),
-                                            border: Border.all(
-                                              color: Colors
-                                                  .black26, // เพิ่มขอบให้กับดรอปดาวน์
-                                            ),
-                                            //color: Colors.pink[300],
-                                          ),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            radius: const Radius.circular(40),
-                                            thickness:
-                                            WidgetStateProperty.all(6),
-                                            thumbVisibility:
-                                            WidgetStateProperty.all(true),
-                                          ),
-                                        ),
-                                        menuItemStyleData: MenuItemStyleData(
-                                          height: 50,
-                                          padding: EdgeInsets.only(
-                                              left: 14, right: 14),
-                                        ),
-                                      ),
+                                    child: SearchField(
+                                      readOnly: true,
+                                      controller: car,
+                                      focusNode: carFocus,
+                                      hintText: getCarNoFromUsername(username.text),
+                                      textInputAction: TextInputAction.done,
+                                      fontText: fontInputText,
+                                      obscureText: false,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
-                              // กรอกรหัสพนักงาน
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -330,6 +298,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                           String? res =
                                           await SimpleBarcodeScanner
                                               .scanBarcode(
+                                            // scanType: ScanType.qr,
                                             context,
                                             barcodeAppBar: const BarcodeAppBar(
                                               appBarTitle: 'Test',
@@ -341,7 +310,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                             isShowFlashIcon: true,
                                             delayMillis: 500,
                                             cameraFace: CameraFace.back,
-                                            scanFormat: ScanFormat.ONLY_BARCODE,
+                                            scanFormat: ScanFormat.ALL_FORMATS,
                                           );
                                           setState(() {
                                             txtBarcode = res as String;
@@ -420,7 +389,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: Text(
-                          "รถคันที่ 1",
+                          "รถ${getCarNoFromUsername(username.text)}",
                           style: TextStyle(
                               fontSize: fontTitle, fontWeight: FontWeight.bold),
                         ),
@@ -432,7 +401,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                           Padding(
                             padding: const EdgeInsets.only(left: 20, bottom: 5),
                             child: Text(
-                              "เช็คอินแล้ว 0 / 5 คน",
+                              "เช็คอินแล้ว ${getCheckIn()} / ${getAllEmployeeInCar()} คน",
                               style: TextStyle(
                                   fontSize: fontSubTitle,
                                   fontWeight: FontWeight.w500),
@@ -561,85 +530,168 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                       ),
                                     ),
                                   ],
-                                  rows: car1.map((row) {
-                                    // bool isHighlighted =
-                                    //     searchedEmployeeCode == row.code;
+                                  rows: (() {
+                                    // Decide which car's data to show based on the username
+                                    List<dynamic> selectedCarData;
 
-                                    return DataRow(
-                                      // color:
-                                      // WidgetStateProperty.resolveWith(
-                                      //       (states) => isHighlighted
-                                      //       ? Colors.yellow.shade200
-                                      //       : Colors.transparent,
-                                      // ),
-                                      cells: <DataCell>[
-                                        DataCell(
-                                          Center(
-                                            child: Text(
-                                              row.code,
-                                              style: TextStyle(
-                                                  fontSize: fontData),
-                                            ),
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            row.name,
-                                            softWrap: true,
-                                            style: TextStyle(
-                                                fontSize: fontData),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Center(
-                                            child: Text(
-                                              row.nickname,
-                                              style: TextStyle(
-                                                  fontSize: fontData),
-                                            ),
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Center(
-                                            child: Text(
-                                              row.color,
-                                              style: TextStyle(
-                                                  fontSize: fontData),
-                                            ),
-                                          ),
-                                        ),
-                                        DataCell(
-                                          InkWell(
-                                            child: Center(
+                                    switch (username.text) {
+                                      case 'car1':
+                                        selectedCarData = car1;
+                                        break;
+                                      case 'car2':
+                                        selectedCarData = car2;
+                                        break;
+                                      case 'car3':
+                                        selectedCarData = car3;
+                                        break;
+                                      case 'car4':
+                                        selectedCarData = car4;
+                                        print(selectedCarData[0].checkIn);
+                                        break;
+                                      default:
+                                        selectedCarData = []; // Return an empty list if no match
+                                    }
+
+                                    // Map the selected data into DataRow widgets
+                                    return selectedCarData.map<DataRow>((row) {
+                                      return DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(
+                                            Center(
                                               child: Text(
-                                                row.checkIn ==
-                                                    false
-                                                    ? 'Check in'
-                                                    : 'เสร็จสิ้น',
-                                                style: TextStyle(
-                                                  fontSize: fontData,
-                                                  color:
-                                                  row.checkIn ==
-                                                      false
-                                                      ? dataButton
-                                                      : success,
-                                                ),
+                                                row.code,
+                                                style: TextStyle(fontSize: fontData),
                                               ),
                                             ),
-                                            onTap: () async {
-                                              // await EmployeeService
-                                              //     .registerEmployee(
-                                              //     row.code);
-                                              // fetchEmployeeData();
-                                              // employeeCode.clear();
-                                              // name.clear();
-                                            },
                                           ),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList(),
+                                          DataCell(
+                                            Text(
+                                              row.name,
+                                              softWrap: true,
+                                              style: TextStyle(fontSize: fontData),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: Text(
+                                                row.nickname,
+                                                style: TextStyle(fontSize: fontData),
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: Text(
+                                                row.color,
+                                                style: TextStyle(fontSize: fontData),
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            InkWell(
+                                              child: Center(
+                                                child: Text(
+                                                  row.checkIn == false ? 'Check in' : 'เสร็จสิ้น',
+                                                  style: TextStyle(
+                                                    fontSize: fontData,
+                                                    color: row.checkIn == false ? dataButton : success,
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: ()  async {
+                                                await EmployeeService.checkInEmployee(row.code).whenComplete(() {
+                                                  fetchEmployeeData();
+                                                });
+                                                employeeCode.clear();
+                                                barcode.clear();
+                                                // Handle your onTap logic here
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }).toList();
+                                  })(),
+                                  // rows: car1.map((row) {
+                                  //   // bool isHighlighted =
+                                  //   //     searchedEmployeeCode == row.code;
+                                  //
+                                  //   return DataRow(
+                                  //     // color:
+                                  //     // WidgetStateProperty.resolveWith(
+                                  //     //       (states) => isHighlighted
+                                  //     //       ? Colors.yellow.shade200
+                                  //     //       : Colors.transparent,
+                                  //     // ),
+                                  //     cells: <DataCell>[
+                                  //       DataCell(
+                                  //         Center(
+                                  //           child: Text(
+                                  //             row.code,
+                                  //             style: TextStyle(
+                                  //                 fontSize: fontData),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       DataCell(
+                                  //         Text(
+                                  //           row.name,
+                                  //           softWrap: true,
+                                  //           style: TextStyle(
+                                  //               fontSize: fontData),
+                                  //           textAlign: TextAlign.start,
+                                  //         ),
+                                  //       ),
+                                  //       DataCell(
+                                  //         Center(
+                                  //           child: Text(
+                                  //             row.nickname,
+                                  //             style: TextStyle(
+                                  //                 fontSize: fontData),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       DataCell(
+                                  //         Center(
+                                  //           child: Text(
+                                  //             row.color,
+                                  //             style: TextStyle(
+                                  //                 fontSize: fontData),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       DataCell(
+                                  //         InkWell(
+                                  //           child: Center(
+                                  //             child: Text(
+                                  //               row.checkIn ==
+                                  //                   false
+                                  //                   ? 'Check in'
+                                  //                   : 'เสร็จสิ้น',
+                                  //               style: TextStyle(
+                                  //                 fontSize: fontData,
+                                  //                 color:
+                                  //                 row.checkIn ==
+                                  //                     false
+                                  //                     ? dataButton
+                                  //                     : success,
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //           onTap: () async {
+                                  //             // await EmployeeService
+                                  //             //     .registerEmployee(
+                                  //             //     row.code);
+                                  //             // fetchEmployeeData();
+                                  //             // employeeCode.clear();
+                                  //             // name.clear();
+                                  //           },
+                                  //         ),
+                                  //       ),
+                                  //     ],
+                                  //   );
+                                  // }).toList(),
                                 ),
                               ),
                             ),

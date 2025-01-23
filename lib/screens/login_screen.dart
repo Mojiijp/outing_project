@@ -134,8 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   colorButton: saveButton,
                   fontTextSize: fontButton,
                   onPressed: () {
-                    if (!['admin', 'car1', 'car2', 'car3'].contains(username.text) ||
-                        !['admin', 'car1', 'car2', 'car3'].contains(password.text)) {
+                    if (!['admin', 'car1', 'car2', 'car3', 'car4'].contains(username.text) ||
+                        !['admin', 'car1', 'car2', 'car3', 'car4'].contains(password.text)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(

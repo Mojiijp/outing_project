@@ -8,6 +8,8 @@ class SearchField extends StatefulWidget {
   final FocusNode focusNode;
   final TextInputAction? textInputAction;
   final TextInputType? keyboardType;
+  final Widget? label;
+  final String? hintText;
   final double fontText;
   final bool obscureText;
   final Widget? prefixIcon;
@@ -34,6 +36,8 @@ class SearchField extends StatefulWidget {
     this.onChanged,
     this.decoration,
     this.onTap,
+    this.label,
+    this.hintText,
   });
 
   @override
@@ -44,6 +48,7 @@ class _SearchFieldState extends State<SearchField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.readOnly,
       style: TextStyle(fontSize: widget.fontText, color: Colors.black),
       controller: widget.controller,
       focusNode: widget.focusNode,
@@ -51,11 +56,19 @@ class _SearchFieldState extends State<SearchField> {
       keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         isDense: true,
+        label: widget.label,
         labelStyle: TextStyle(
           fontSize: widget.fontText,
           color: widget.focusNode.hasFocus
               ? Colors.teal
               : subLabel,
+        ),
+        hintText: widget.hintText,
+        hintStyle: TextStyle(
+          fontSize: widget.fontText,
+          color: widget.focusNode.hasFocus
+              ? Colors.teal
+              : Colors.black,
         ),
         filled: true,
         fillColor: Colors.white,
