@@ -413,7 +413,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                             child: InkWell(
                               onTap: () {
                                 setState(() {
-                                  //isVisibleTalingChan = !isVisibleTalingChan;
+                                  isVisibleCar = !isVisibleCar;
                                 });
                               },
                               child: Text(
@@ -428,7 +428,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                         ],
                       ),
                       Visibility(
-                        visible: isVisibleTalingChan,
+                        visible: isVisibleCar,
                         child: Row(
                           children: [
                             Expanded(
