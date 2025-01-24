@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Outing Project',
+      title: 'Outing Quadel',
       theme: ThemeData(
         fontFamily: 'Prompt',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),

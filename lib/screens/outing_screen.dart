@@ -66,11 +66,6 @@ class _OutingScreenState extends State<OutingScreen> {
       // อัปเดตข้อมูลที่กรองแล้ว
       officeTaLingChan = filteredData.where((employee) => employee.office == 'ตลิ่งชัน').toList();
       officeBanglen = filteredData.where((employee) => employee.office == 'บางเลน').toList();
-
-      // ไฮไลต์แถวแรกที่ตรงกับผลการค้นหา
-      // if (filteredData.isNotEmpty) {
-      //   searchedEmployeeCode = filteredData[0].code;
-      // }
     });
   }
 
@@ -432,12 +427,14 @@ class _OutingScreenState extends State<OutingScreen> {
                                                   )
                                               );
                                             }
-
                                           });
                                         },
-                                        icon: Icon(
-                                          Icons.qr_code_scanner,
-                                          color: Colors.black,
+                                        icon: Tooltip(
+                                          message: 'สแกน QR Code',
+                                          child: Icon(
+                                            Icons.qr_code_scanner,
+                                            color: Colors.black,
+                                          ),
                                         )),
                                   )
                                 ],

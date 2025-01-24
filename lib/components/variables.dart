@@ -21,3 +21,4 @@ bool isObscured = true;
 bool isVisibleTalingChan = true;
 bool isVisibleBangLen = true;
 bool isVisibleCar = true;
+bool isVisibleRound = false;

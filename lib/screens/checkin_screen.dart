@@ -6,6 +6,7 @@ import 'package:outing_project/src/model/employee.dart';
 import 'package:outing_project/src/services/employee_service.dart';
 import 'package:outing_project/widgets/button.dart';
 import 'package:outing_project/widgets/search_form.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class CheckInScreen extends StatefulWidget {
@@ -24,7 +25,26 @@ class _CheckInScreenState extends State<CheckInScreen> {
   List<Employee>? employeeData;
 
   String? selectedValue;
+  String? searchedEmployeeCode;
   String carNo = '';
+
+  int countOfRound = 1;
+
+  // ฟังก์ชันเพื่อดึงค่าจาก SharedPreferences
+  loadCountOfRound() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      countOfRound = prefs.getInt('countOfRound') ?? 1;  // ถ้าไม่มีค่า จะใช้ค่าเริ่มต้นเป็น 1
+    });
+  }
+
+  incrementCountOfRound() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      countOfRound++;
+    });
+    await prefs.setInt('countOfRound', countOfRound); // เก็บค่าใหม่ลง SharedPreferences
+  }
 
   void fetchEmployeeData() async {
     // ดึงข้อมูลพนักงานทั้งหมดจาก API
@@ -55,6 +75,34 @@ class _CheckInScreenState extends State<CheckInScreen> {
     });
   }
 
+  void empNotRegisData() {
+    setState(() {
+      var filteredData = employeeData!.where((employee) {
+        return employee.checkIn == false;
+      }).toList();
+
+      switch (username.text) {
+        case 'car1':
+          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1').toList();
+          break;
+
+        case 'car2':
+          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2').toList();
+          break;
+
+        case 'car3':
+          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3').toList();
+          break;
+
+        case 'car4':
+          car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+          break;
+
+        default: car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+      }
+    });
+  }
+
   String getCarNoFromUsername(String username) {
     switch(username) {
       case 'car1':
@@ -71,33 +119,127 @@ class _CheckInScreenState extends State<CheckInScreen> {
   }
 
   int getCheckIn() {
+    if (employeeData == null) {
+      return 0;
+    }
+
+    var filteredData = employeeData?.where((employee) {
+      return employee.checkIn == true;
+    }).toList();
+
     switch (username.text) {
       case 'car1':
-        return car1.where((register) => register.checkIn == true).length;
+        return filteredData!.where((register) => register.car == 'คันที่ 1').length;
       case 'car2':
-        return car2.where((register) => register.checkIn == true).length;
+        return filteredData!.where((register) => register.car == 'คันที่ 2').length;
       case 'car3':
-        return car3.where((register) => register.checkIn == true).length;
+        return filteredData!.where((register) => register.car == 'คันที่ 3').length;
       case 'car4':
-        return car4.where((register) => register.checkIn == true).length;
+        return filteredData!.where((register) => register.car == 'Mini Bus').length;
       default:
         return 0;  // Return 0 if the username doesn't match any car
     }
   }
 
   int getAllEmployeeInCar() {
+    if (employeeData == null) {
+      return 0;
+    }
     switch (username.text) {
       case 'car1':
-        return car1.where((register) => register.car == 'คันที่ 1').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 1').length;
       case 'car2':
-        return car2.where((register) => register.car == 'คันที่ 2').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 2').length;
       case 'car3':
-        return car3.where((register) => register.car == 'คันที่ 3').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 3').length;
       case 'car4':
-        return car4.where((register) => register.car == 'Mini Bus').length;
+        return employeeData!.where((register) => register.car == 'Mini Bus').length;
       default:
-        return car1.where((register) => register.car == 'คันที่ 1').length; // Return 0 if the username doesn't match any car
+        return employeeData!.where((register) => register.car == 'คันที่ 1').length; // Return 0 if the username doesn't match any car
     }
+  }
+
+  void searchEmployeeData() {
+    setState(() {
+      // กรองข้อมูลจากรหัสพนักงานที่กรอก
+      var filteredData = employeeData!.where((employee) {
+        return employee.code.contains(employeeCode.text) &&
+            employee.barcode.contains(barcode.text);
+      }).toList();
+
+      switch (username.text) {
+        case 'car1':
+          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1').toList();
+          break;
+
+        case 'car2':
+          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2').toList();
+          break;
+
+        case 'car3':
+          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3').toList();
+          break;
+
+        case 'car4':
+          car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+          break;
+
+        default: print('Username does not match any car');
+      }
+      if (filteredData.isNotEmpty) {
+        searchedEmployeeCode = filteredData[0].code;
+      }
+    });
+  }
+
+  void alertDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: buttonCamera,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            child: SizedBox(
+              height: screenHeight / 3,
+              width: screenWidth / 1.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: fontTitleSize
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black
+                        //RGB = (34, 148, 65)
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                          "ตกลง",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fontButtonSize
+                          )
+                      )
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -105,6 +247,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
     // TODO: implement initState
     super.initState();
     fetchEmployeeData();
+    loadCountOfRound();
     employeeCode.clear();
     barcode.clear();
   }
@@ -116,9 +259,10 @@ class _CheckInScreenState extends State<CheckInScreen> {
     double fontAppbar = screenWidth * 0.05;
     double fontTitle = screenWidth * 0.04;
     double fontSubTitle = screenWidth * 0.035;
-    double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
     double fontData = screenWidth * 0.025;
+    double fontTitleDialog = screenWidth * 0.06;
+    double fontButtonDialog = screenWidth * 0.05;
 
     return SafeArea(
       child: Scaffold(
@@ -213,6 +357,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                       keyboardType: TextInputType.number,
                                       fontText: fontInputText,
                                       obscureText: false,
+                                      onChanged: (val) {
+                                        searchEmployeeData();
+                                      },
                                     ),
                                   ),
                                 ],
@@ -231,21 +378,9 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                     colorButton: saveButton,
                                     fontTextSize: fontSubTitle,
                                     onPressed: () async {
-                                      if (selectedValue == null ||
-                                          selectedValue == '') {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              "กรุณาเลือกสำนักงาน",
-                                              style: TextStyle(
-                                                  fontSize: fontInputText),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-
-                                      }
+                                      searchEmployeeData();
+                                      employeeCode.clear();
+                                      barcode.clear();
                                     },
                                   ),
                                 ],
@@ -272,10 +407,12 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                       controller: barcode,
                                       focusNode: barcodeFocus,
                                       textInputAction: TextInputAction.done,
-                                      keyboardType: TextInputType.text,
+                                      keyboardType: TextInputType.number,
                                       fontText: fontInputText,
                                       obscureText: false,
-                                      onChanged: (val) {},
+                                      onChanged: (val) {
+                                        searchEmployeeData();
+                                      },
                                     ),
                                   ),
                                 ],
@@ -298,7 +435,6 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                           String? res =
                                           await SimpleBarcodeScanner
                                               .scanBarcode(
-                                            // scanType: ScanType.qr,
                                             context,
                                             barcodeAppBar: const BarcodeAppBar(
                                               appBarTitle: 'Test',
@@ -315,11 +451,29 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                           setState(() {
                                             txtBarcode = res as String;
                                             print('barcode : $txtBarcode');
+                                            if(employeeData!.where((employee) {
+                                              return employee.barcode.contains(txtBarcode);
+                                            }).toList().isNotEmpty) {
+                                              barcode.text = txtBarcode;
+                                              searchEmployeeData();
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                        "ไม่พบข้อมูล",
+                                                        style: TextStyle(fontSize: fontInputText),
+                                                      )
+                                                  )
+                                              );
+                                            }
                                           });
                                         },
-                                        icon: Icon(
-                                          Icons.qr_code_scanner,
-                                          color: Colors.black,
+                                        icon: Tooltip(
+                                          message: 'สแกน QR Code',
+                                          child: Icon(
+                                            Icons.qr_code_scanner,
+                                            color: Colors.black,
+                                          ),
                                         )),
                                   )
                                 ],
@@ -337,14 +491,40 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                     backgroundColor: buttonAdd,
                                     foregroundColor: buttonAdd,
                                     radius: 20,
-                                    child: IconButton(
-                                        onPressed: () async {
-
-                                        },
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: Colors.black,
-                                        )),
+                                    child: Tooltip(
+                                      message: 'เพิ่มรอบใหม่',
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            if(getCheckIn() != getAllEmployeeInCar()) {
+                                              alertDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  'ไม่สามารถเพิ่มรอบใหม่ได้\n ยังไม่ได้ปิดรอบ',
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            } else {
+                                              await EmployeeService.closeRoundEmployee(getCarNoFromUsername(username.text));
+                                              setState(() {
+                                                isVisibleRound = false;
+                                                incrementCountOfRound();
+                                              });
+                                              fetchEmployeeData();
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                        "เพิ่มรอบสำเร็จ",
+                                                        style: TextStyle(fontSize: fontInputText),
+                                                      )
+                                                  )
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: Colors.black,
+                                          )),
+                                    ),
                                   )
                                 ],
                               ),
@@ -361,14 +541,39 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                     backgroundColor: buttonClose,
                                     foregroundColor: buttonClose,
                                     radius: 20,
-                                    child: IconButton(
-                                        onPressed: () async {
-
-                                        },
-                                        icon: Icon(
-                                          Icons.close_rounded,
-                                          color: Colors.black,
-                                        )),
+                                    child: Tooltip(
+                                      message: 'ปิดรอบ',
+                                      child: IconButton(
+                                          onPressed: () async {
+                                            if(getCheckIn() != getAllEmployeeInCar()) {
+                                              alertDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  'ไม่สามารถปิดรอบได้\n ยังมีคนเช็คอินไม่ครบ',
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            } else {
+                                              print(getCarNoFromUsername(username.text));
+                                              setState(() {
+                                                isVisibleRound = true;
+                                                fetchEmployeeData();
+                                              });
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                      content: Text(
+                                                        "ปิดรอบสำเร็จ",
+                                                        style: TextStyle(fontSize: fontInputText),
+                                                      )
+                                                  )
+                                              );
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.close_rounded,
+                                            color: Colors.black,
+                                          )),
+                                    ),
                                   )
                                 ],
                               ),
@@ -386,25 +591,45 @@ class _CheckInScreenState extends State<CheckInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //data car
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "รถ${getCarNoFromUsername(username.text)}",
-                          style: TextStyle(
-                              fontSize: fontTitle, fontWeight: FontWeight.bold),
-                        ),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "รถ${getCarNoFromUsername(username.text)} (รอบที่ $countOfRound)",
+                              style: TextStyle(
+                                  fontSize: fontTitle, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Visibility(
+                            visible: isVisibleRound,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                "ปิดรอบแล้ว",
+                                style: TextStyle(
+                                    fontSize: fontTitle, fontWeight: FontWeight.bold, color: dataButton),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, bottom: 5),
-                            child: Text(
-                              "เช็คอินแล้ว ${getCheckIn()} / ${getAllEmployeeInCar()} คน",
-                              style: TextStyle(
-                                  fontSize: fontSubTitle,
-                                  fontWeight: FontWeight.w500),
+                          InkWell(
+                            onTap: () {
+                              empNotRegisData();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20, bottom: 5),
+                              child: Text(
+                                "เช็คอินแล้ว ${getCheckIn()} / ${getAllEmployeeInCar()} คน",
+                                style: TextStyle(
+                                    fontSize: fontSubTitle,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
                           ),
                           Padding(
@@ -455,8 +680,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                       Colors.teal.shade100),
                                   dataRowColor:
                                   WidgetStateProperty.resolveWith(
-                                          (states) => Colors.teal.shade50
-                                          .withOpacity(0.5)),
+                                          (states) => Colors.teal.shade50),
                                   horizontalMargin: 10,
                                   columnSpacing: 30,
                                   border: TableBorder.all(
@@ -531,7 +755,6 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                     ),
                                   ],
                                   rows: (() {
-                                    // Decide which car's data to show based on the username
                                     List<dynamic> selectedCarData;
 
                                     switch (username.text) {
@@ -546,152 +769,94 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                         break;
                                       case 'car4':
                                         selectedCarData = car4;
-                                        print(selectedCarData[0].checkIn);
                                         break;
                                       default:
                                         selectedCarData = []; // Return an empty list if no match
                                     }
 
-                                    // Map the selected data into DataRow widgets
-                                    return selectedCarData.map<DataRow>((row) {
-                                      return DataRow(
-                                        cells: <DataCell>[
-                                          DataCell(
-                                            Center(
-                                              child: Text(
-                                                row.code,
-                                                style: TextStyle(fontSize: fontData),
-                                              ),
-                                            ),
+                                    // ตรวจสอบว่า selectedCarData เป็นลิสต์ว่างหรือไม่
+                                    if (selectedCarData.isEmpty) {
+                                      return [
+                                        DataRow(cells: [
+                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                          DataCell(Text('ไม่พบข้อมูล', style: TextStyle(fontSize: fontData, color: buttonClose))),
+                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                          // คุณสามารถเพิ่ม DataCell อื่นๆ ในที่นี้ได้ตามต้องการ
+                                        ])
+                                      ];
+                                    } else {
+                                      return selectedCarData.map<DataRow>((row) {
+                                        bool isHighlighted =
+                                            searchedEmployeeCode ==
+                                                row.code;
+                                        return DataRow(
+                                          color: WidgetStateProperty
+                                              .resolveWith(
+                                                (states) => isHighlighted
+                                                ? Colors.yellow.shade200
+                                                : Colors.transparent,
                                           ),
-                                          DataCell(
-                                            Text(
-                                              row.name,
-                                              softWrap: true,
-                                              style: TextStyle(fontSize: fontData),
-                                              textAlign: TextAlign.start,
-                                            ),
-                                          ),
-                                          DataCell(
-                                            Center(
-                                              child: Text(
-                                                row.nickname,
-                                                style: TextStyle(fontSize: fontData),
-                                              ),
-                                            ),
-                                          ),
-                                          DataCell(
-                                            Center(
-                                              child: Text(
-                                                row.color,
-                                                style: TextStyle(fontSize: fontData),
-                                              ),
-                                            ),
-                                          ),
-                                          DataCell(
-                                            InkWell(
-                                              child: Center(
+                                          cells: <DataCell>[
+                                            DataCell(
+                                              Center(
                                                 child: Text(
-                                                  row.checkIn == false ? 'Check in' : 'เสร็จสิ้น',
-                                                  style: TextStyle(
-                                                    fontSize: fontData,
-                                                    color: row.checkIn == false ? dataButton : success,
-                                                  ),
+                                                  row.code,
+                                                  style: TextStyle(fontSize: fontData),
                                                 ),
                                               ),
-                                              onTap: ()  async {
-                                                await EmployeeService.checkInEmployee(row.code).whenComplete(() {
-                                                  fetchEmployeeData();
-                                                });
-                                                employeeCode.clear();
-                                                barcode.clear();
-                                                // Handle your onTap logic here
-                                              },
                                             ),
-                                          ),
-                                        ],
-                                      );
-                                    }).toList();
+                                            DataCell(
+                                              Text(
+                                                row.name,
+                                                softWrap: true,
+                                                style: TextStyle(fontSize: fontData),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ),
+                                            DataCell(
+                                              Center(
+                                                child: Text(
+                                                  row.nickname,
+                                                  style: TextStyle(fontSize: fontData),
+                                                ),
+                                              ),
+                                            ),
+                                            DataCell(
+                                              Center(
+                                                child: Text(
+                                                  row.color,
+                                                  style: TextStyle(fontSize: fontData),
+                                                ),
+                                              ),
+                                            ),
+                                            DataCell(
+                                              InkWell(
+                                                child: Center(
+                                                  child: Text(
+                                                    row.checkIn == false ? 'Check in' : 'เสร็จสิ้น',
+                                                    style: TextStyle(
+                                                      fontSize: fontData,
+                                                      color: row.checkIn == false ? dataButton : success,
+                                                    ),
+                                                  ),
+                                                ),
+                                                onTap: ()  async {
+                                                  await EmployeeService.checkInEmployee(row.code).whenComplete(() {
+                                                    fetchEmployeeData();
+                                                  });
+                                                  employeeCode.clear();
+                                                  barcode.clear();
+                                                  // Handle your onTap logic here
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }).toList();
+                                    }
                                   })(),
-                                  // rows: car1.map((row) {
-                                  //   // bool isHighlighted =
-                                  //   //     searchedEmployeeCode == row.code;
-                                  //
-                                  //   return DataRow(
-                                  //     // color:
-                                  //     // WidgetStateProperty.resolveWith(
-                                  //     //       (states) => isHighlighted
-                                  //     //       ? Colors.yellow.shade200
-                                  //     //       : Colors.transparent,
-                                  //     // ),
-                                  //     cells: <DataCell>[
-                                  //       DataCell(
-                                  //         Center(
-                                  //           child: Text(
-                                  //             row.code,
-                                  //             style: TextStyle(
-                                  //                 fontSize: fontData),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //       DataCell(
-                                  //         Text(
-                                  //           row.name,
-                                  //           softWrap: true,
-                                  //           style: TextStyle(
-                                  //               fontSize: fontData),
-                                  //           textAlign: TextAlign.start,
-                                  //         ),
-                                  //       ),
-                                  //       DataCell(
-                                  //         Center(
-                                  //           child: Text(
-                                  //             row.nickname,
-                                  //             style: TextStyle(
-                                  //                 fontSize: fontData),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //       DataCell(
-                                  //         Center(
-                                  //           child: Text(
-                                  //             row.color,
-                                  //             style: TextStyle(
-                                  //                 fontSize: fontData),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //       DataCell(
-                                  //         InkWell(
-                                  //           child: Center(
-                                  //             child: Text(
-                                  //               row.checkIn ==
-                                  //                   false
-                                  //                   ? 'Check in'
-                                  //                   : 'เสร็จสิ้น',
-                                  //               style: TextStyle(
-                                  //                 fontSize: fontData,
-                                  //                 color:
-                                  //                 row.checkIn ==
-                                  //                     false
-                                  //                     ? dataButton
-                                  //                     : success,
-                                  //               ),
-                                  //             ),
-                                  //           ),
-                                  //           onTap: () async {
-                                  //             // await EmployeeService
-                                  //             //     .registerEmployee(
-                                  //             //     row.code);
-                                  //             // fetchEmployeeData();
-                                  //             // employeeCode.clear();
-                                  //             // name.clear();
-                                  //           },
-                                  //         ),
-                                  //       ),
-                                  //     ],
-                                  //   );
-                                  // }).toList(),
                                 ),
                               ),
                             ),

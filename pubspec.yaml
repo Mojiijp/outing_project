@@ -38,6 +38,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   http: ^1.2.2
   simple_barcode_scanner: ^0.2.6
+  shared_preferences: ^2.4.0
 
 dev_dependencies:
   flutter_test:

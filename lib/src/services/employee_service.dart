@@ -60,7 +60,6 @@ class EmployeeService {
 
       if (response.statusCode == 200) {
         print('check in success');
-        print(jsonDecode(response.body) as Map<String, dynamic>);
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
         print('Error response body: ${response.body}');
@@ -71,6 +70,30 @@ class EmployeeService {
       print("Error: $e");
       return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
     }
+  }
+
+  static Future<Map<String, dynamic>> closeRoundEmployee(String car) async {
+    var result;
+
+    final Map<String, dynamic> carData = {
+      'car': car
+    };
+
+    print('Before sending data: ${jsonEncode(car)}');
+
+    final response = await http.post(
+      Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.closeRound),
+      body: json.encode(carData),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      var body = response.body;
+      result = await json.decode(body);
+      print(result);
+    }
+    return result;
+
   }
 
 
