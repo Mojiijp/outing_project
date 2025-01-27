@@ -8,5 +8,9 @@ class _AuthEndPoints {
   final String allEmployee = "/employee";
   final String registerEmployee = "/register/";
   final String checkInEmployee = "/check-in/";
+  final String checkInBoat = "/checkin-boat/";
   final String closeRound = "/close-round";
+  final String nightParty = "/night-party/";
+  final String closeNightParty = "/close-nightParty/";
+  final String closeBoat = "/close-boat";
 }

@@ -7,6 +7,7 @@ class Employee {
   String department;
   String color;
   String car;
+  String boat;
   String office;
   bool outingStatus;
   bool flagGift;
@@ -15,6 +16,7 @@ class Employee {
   bool nightParty;
   String gift;
   bool rewards;
+  bool checkBoat;
 
   Employee({
     required this.code,
@@ -25,6 +27,7 @@ class Employee {
     required this.department,
     required this.color,
     required this.car,
+    required this.boat,
     required this.office,
     required this.outingStatus,
     required this.flagGift,
@@ -32,7 +35,8 @@ class Employee {
     required this.checkIn,
     required this.nightParty,
     required this.gift,
-    required this.rewards
+    required this.rewards,
+    required this.checkBoat
   });
 
   factory Employee.fromJSON(Map<String, dynamic> json) => Employee(
@@ -44,6 +48,7 @@ class Employee {
     department: json['department'] ?? '',
     color: json['color'] ?? '',
     car: json['car'] ?? '',
+    boat: json['boat'] ?? '',
     office: json['office'] ?? '',
     outingStatus: json['outing_status'] ?? false,
     flagGift: json['flag_gift'] ?? false,
@@ -52,5 +57,6 @@ class Employee {
     nightParty: json['nightparty'] ?? false,
     gift: json['gift'] ?? '',
     rewards: json['rewards'] ?? false,
+    checkBoat: json['check_boat'] ?? false,
   );
 }

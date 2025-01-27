@@ -72,6 +72,52 @@ class EmployeeService {
     }
   }
 
+  static Future<Map<String, dynamic>> checkInBoat(String code) async {
+    try {
+      print('Before sending data: ${jsonEncode(code)}');
+
+      final response = await http.put(
+        Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.checkInBoat + code),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('check in success');
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        print('Error response body: ${response.body}');
+        throw Exception(
+            "Failed to send data. Status Code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+      return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
+    }
+  }
+
+  static Future<Map<String, dynamic>> nightPartyEmployee(String code) async {
+    try {
+      print('Before sending data: ${jsonEncode(code)}');
+
+      final response = await http.put(
+        Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.nightParty + code),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('check in success');
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        print('Error response body: ${response.body}');
+        throw Exception(
+            "Failed to send data. Status Code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+      return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
+    }
+  }
+
   static Future<Map<String, dynamic>> closeRoundEmployee(String car) async {
     var result;
 
@@ -84,6 +130,52 @@ class EmployeeService {
     final response = await http.post(
       Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.closeRound),
       body: json.encode(carData),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      var body = response.body;
+      result = await json.decode(body);
+      print(result);
+    }
+    return result;
+
+  }
+
+  static Future<Map<String, dynamic>> closeNightPartyEmployee() async {
+    try {
+
+      final response = await http.put(
+        Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.closeNightParty),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('check in success');
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        print('Error response body: ${response.body}');
+        throw Exception(
+            "Failed to send data. Status Code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+      return {}; // คืนค่า Map เปล่าในกรณีเกิดข้อผิดพลาด
+    }
+  }
+
+  static Future<Map<String, dynamic>> closeBoatEmployee(String boat) async {
+    var result;
+
+    final Map<String, dynamic> boatData = {
+      'boat': boat
+    };
+
+    print('Before sending data: ${jsonEncode(boat)}');
+
+    final response = await http.post(
+      Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.closeBoat),
+      body: json.encode(boatData),
       headers: {'Content-Type': 'application/json'},
     );
 

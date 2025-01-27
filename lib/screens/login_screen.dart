@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double fontButton = screenWidth * 0.05;
     double fontInputText = screenWidth * 0.05;
     double iconSize = screenWidth * 0.05;
-    double fontVersion = screenWidth * 0.03;
+    double fontVersion = screenWidth * 0.035;
 
     return SafeArea(
       child: Scaffold(
@@ -166,10 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text(
-                  version,
-                  style: TextStyle(
-                    fontSize: fontVersion
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    version,
+                    style: TextStyle(
+                      fontSize: fontVersion
+                    ),
                   ),
                 ),
               ),

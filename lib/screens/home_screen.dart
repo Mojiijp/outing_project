@@ -96,7 +96,7 @@ class _HomescreenState extends State<Homescreen> {
                       screenHeight,
                       screenWidth,
                       'assets/images/bus.png',
-                      'Check in',
+                      'Check in ขึ้นรถ',
                       fontTextGrid,
                       () {
                         Get.toNamed('/check-in');
@@ -115,8 +115,8 @@ class _HomescreenState extends State<Homescreen> {
                     gridViewDetail(
                       screenHeight,
                       screenWidth,
-                      'assets/images/more.png',
-                      'อื่น ๆ',
+                      'assets/images/ship.png',
+                      'check in ขึ้นเรือ',
                       fontTextGrid,
                       () {
                         Get.toNamed('/more');
