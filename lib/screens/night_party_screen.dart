@@ -19,7 +19,7 @@ enum GiftRadio { thousand, eightHundred, fiveHundred}
 class _NightPartyScreenState extends State<NightPartyScreen> {
   List<String> items = ['ตลิ่งชัน', 'บางเลน'];
   List<String> gift = ['1000 บาท', '800 บาท', '500 บาท'];
-  GiftRadio? character = GiftRadio.thousand;
+  GiftRadio? character;
 
   Map<GiftRadio, String> giftValues = {
     GiftRadio.thousand: '1000',
@@ -289,11 +289,13 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                           onPressed: () async {
                             await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
                             if(mounted) {
+                              character = null;
                               fetchEmployeeData();
                               employeeCode.clear();
                               name.clear();
                             }
                             Navigator.pop(context);
+
                           },
                           child: Text(
                               "ตกลง",
