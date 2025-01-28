@@ -14,12 +14,23 @@ class NightPartyScreen extends StatefulWidget {
   @override
   State<NightPartyScreen> createState() => _NightPartyScreenState();
 }
+enum GiftRadio { thousand, eightHundred, fiveHundred}
 
 class _NightPartyScreenState extends State<NightPartyScreen> {
   List<String> items = ['ตลิ่งชัน', 'บางเลน'];
   List<String> gift = ['1000 บาท', '800 บาท', '500 บาท'];
+  GiftRadio? character = GiftRadio.thousand;
+
+  Map<GiftRadio, String> giftValues = {
+    GiftRadio.thousand: '1000',
+    GiftRadio.eightHundred: '800',
+    GiftRadio.fiveHundred: '500',
+  };
+
+  String radioValue = '';
+
   String? selectedValue; // ค่าของสำนักงานที่เลือก
-  String? selectedGift;
+  String? selectedGiftValue;
 
   List<Employee>? employeeData;
   List officeTaLingChan = [];
@@ -59,7 +70,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
   void empNotRegisData() {
     setState(() {
       var filteredData = employeeData!.where((employee) {
-        return employee.outingStatus == false;
+        return employee.nightParty == false;
       }).toList();
 
       // อัปเดตข้อมูลที่กรองแล้ว
@@ -141,20 +152,70 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     );
   }
 
-  void showDropdownDialog(double screenHeight, double screenWidth, double fontTitleText, double fontDropdown, double fontButton) {
+  void errorDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: buttonCamera,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            child: SizedBox(
+              height: screenHeight / 3,
+              width: screenWidth / 1.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontTitleSize
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black
+                        //RGB = (34, 148, 65)
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                          "ตกลง",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fontButtonSize
+                          )
+                      )
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showDropdownDialog(double screenHeight, double screenWidth, double fontTitleText, double fontRadio, double fontButton, String code) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setStateSB) {
+          builder: (BuildContext context, void Function(void Function()) setState) {
             return PopScope(
-              //canPop: false,
+              canPop: false,
               child: Dialog(
                 elevation: 0,
                 backgroundColor: Colors.green[200],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 child: SizedBox(
-                  height: screenHeight / 3,
+                  height: screenHeight / 2,
                   width: screenWidth / 1.2,
                   child : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -163,118 +224,61 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                       Text(
                         "กรุณาเลือกกลุ่มของรางวัล",
                         style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600,
-                          fontSize: fontTitleText
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                            fontSize: fontTitleText
                         ),
                         textAlign: TextAlign.center,
                       ),
                       ///dropdown
                       SizedBox(
-                        height: screenHeight / 10,
-                        width: screenWidth / 3,
-                        child:  DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Row(
-                              children: [
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'เลือกของรางวัล',
-                                    style: TextStyle(
-                                      fontSize: fontDropdown,
-                                      fontWeight: FontWeight.bold,
-                                      color: subHeader,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            items: gift
-                                .map((String item) =>
-                                DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: TextStyle(
-                                      fontSize: fontDropdown,
-                                      fontWeight:
-                                      FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                    overflow:
-                                    TextOverflow.ellipsis,
-                                  ),
-                                ))
-                                .toList(),
-                            value: selectedGift,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedGift = value;
-                                setStateSB(() {});
-                                // selectedValue = value;
-                                // if(selectedValue == 'ตลิ่งชัน') {
-                                //   isVisibleTalingChan = true;
-                                //   isVisibleBangLen = false;
-                                // } else {
-                                //   isVisibleTalingChan = false;
-                                //   isVisibleBangLen = true;
-                                // }
-                              });
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: screenHeight / 20,
-                              width: screenWidth / 3,
-                              padding: const EdgeInsets.only(
-                                  left: 14, right: 14),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
-                                color: Colors.white,
-                              ),
-                              elevation: 2,
-                            ),
-                            iconStyleData: IconStyleData(
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_outlined,
-                              ),
-                              iconSize: fontDropdown,
-                              iconEnabledColor: Colors.black,
-                              iconDisabledColor: Colors.grey,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                              maxHeight: 200,
-                              width: screenWidth / 3,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: Colors
-                                      .black26, // เพิ่มขอบให้กับดรอปดาวน์
-                                ),
-                                //color: Colors.pink[300],
-                              ),
-                              scrollbarTheme: ScrollbarThemeData(
-                                radius: const Radius.circular(40),
-                                thickness:
-                                WidgetStateProperty.all(6),
-                                thumbVisibility:
-                                WidgetStateProperty.all(true),
+                        height: screenHeight / 5,
+                        width: screenWidth / 2,
+                        child: Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: Text('1000 บาท', style: TextStyle(fontSize: fontRadio)),
+                              leading: Radio<GiftRadio>(
+                                value: GiftRadio.thousand,
+                                groupValue: character,
+                                onChanged: (GiftRadio? value) {
+                                  setState(() {
+                                    character = value;
+                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
+                                    print('Selected value: $selectedGiftValue');
+                                  });
+                                },
                               ),
                             ),
-                            menuItemStyleData: MenuItemStyleData(
-                              height: 50,
-                              padding: EdgeInsets.only(
-                                  left: 14, right: 14),
+                            ListTile(
+                              title: Text('800 บาท', style: TextStyle(fontSize: fontRadio)),
+                              leading: Radio<GiftRadio>(
+                                value: GiftRadio.eightHundred,
+                                groupValue: character,
+                                onChanged: (GiftRadio? value) {
+                                  setState(() {
+                                    character = value;
+                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
+                                    print('Selected value: $selectedGiftValue');
+                                  });
+                                },
+                              ),
                             ),
-                          ),
+                            ListTile(
+                              title: Text('500 บาท', style: TextStyle(fontSize: fontRadio)),
+                              leading: Radio<GiftRadio>(
+                                value: GiftRadio.fiveHundred,
+                                groupValue: character,
+                                onChanged: (GiftRadio? value) {
+                                  setState(() {
+                                    character = value;
+                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
+                                    print('Selected value: $selectedGiftValue');
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       ///button
@@ -282,11 +286,14 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromRGBO(34, 148, 65, 1),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
+                            if(mounted) {
+                              fetchEmployeeData();
+                              employeeCode.clear();
+                              name.clear();
+                            }
                             Navigator.pop(context);
-                            setStateSB(() {
-                              selectedGift = null;
-                            });
                           },
                           child: Text(
                               "ตกลง",
@@ -322,9 +329,10 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     double fontAppbar = screenWidth * 0.05;
     double fontTitle = screenWidth * 0.04;
     double fontSubTitle = screenWidth * 0.035;
+    double fontRadio = screenWidth * 0.045;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.025;
+    double fontData = screenWidth * 0.03;
     double fontTitleDialog = screenWidth * 0.06;
     double fontButtonDialog = screenWidth * 0.05;
 
@@ -736,13 +744,41 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //data talingchan
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Text(
-                        "สำนักงานใหญ่ (ตลิ่งชัน)",
-                        style: TextStyle(
-                            fontSize: fontTitle, fontWeight: FontWeight.bold),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            "สำนักงานใหญ่ (ตลิ่งชัน)",
+                            style: TextStyle(
+                                fontSize: fontTitle, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            fetchEmployeeData();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                      "รีเฟรชข้อมูลสำเร็จ",
+                                      style: TextStyle(fontSize: fontInputText),
+                                    )
+                                )
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
+                            // child: Text(
+                            //   "รีเฟรช",
+                            //   style: TextStyle(
+                            //       fontSize: fontTitle, fontWeight: FontWeight.bold),
+                            // ),
+                          ),
+                        ),
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -750,7 +786,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                       children: [
                         InkWell(
                           onTap: () {
-
+                            empNotRegisData();
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20, bottom: 5),
@@ -784,196 +820,251 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                     ),
                     Visibility(
                       visible: isVisibleTalingChan,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: employeeData == null
-                                ? Center(
-                              child: SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 4, // ลดความหนาของเส้น
-                                  valueColor:
-                                  AlwaysStoppedAnimation<Color>(
-                                      const Color.fromARGB(255, 255,
-                                          145, 182)), // สี
-                                ),
+                      child: employeeData == null
+                        ? Center(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4, // ลดความหนาของเส้น
+                          valueColor:
+                          AlwaysStoppedAnimation<Color>(
+                              const Color.fromARGB(255, 255,
+                                  145, 182)), // สี
+                        ),
+                      ),
+                    )
+                        : SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              headingRowColor:
+                              WidgetStateProperty.resolveWith(
+                                      (states) =>
+                                  Colors.teal.shade100),
+                              dataRowColor:
+                              WidgetStateProperty.resolveWith(
+                                      (states) => Colors.teal.shade50),
+                              horizontalMargin: 10,
+                              columnSpacing: 30,
+                              border: TableBorder.all(
+                                color: Colors.grey.shade300,
+                                width: 1,
                               ),
-                            )
-                                : FittedBox(
-                              child: DataTable(
-                                headingRowColor:
-                                WidgetStateProperty.resolveWith(
-                                        (states) =>
-                                    Colors.teal.shade100),
-                                dataRowColor:
-                                WidgetStateProperty.resolveWith(
-                                        (states) => Colors.teal.shade50),
-                                horizontalMargin: 10,
-                                columnSpacing: 30,
-                                border: TableBorder.all(
-                                  color: Colors.grey.shade300,
-                                  width: 1,
+                              columns: <DataColumn>[
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'สถานะ',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'รหัส',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'รหัส',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
                                       ),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'ชื่อ-นามสกุล',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'ชื่อ-นามสกุล',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
                                       ),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'ชื่อเล่น',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'ชื่อเล่น',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
                                       ),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'แผนก',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'แผนก',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
                                       ),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'สถานะ',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
+                                ),
+                                DataColumn(
+                                  label: Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        'รางวัล',
+                                        style: TextStyle(
+                                            fontSize: fontData,
+                                            fontWeight:
+                                            FontWeight.w500),
                                       ),
                                     ),
                                   ),
-                                ],
-                                rows: officeTaLingChan.map((row) {
-                                  bool isHighlighted =
-                                      searchedEmployeeCode == row.code;
+                                ),
+                              ],
+                              rows: officeTaLingChan.map((row) {
+                                bool isHighlighted =
+                                    searchedEmployeeCode == row.code;
 
-                                  return DataRow(
-                                    color:
-                                    WidgetStateProperty.resolveWith(
-                                          (states) => isHighlighted
-                                          ? Colors.yellow.shade200
-                                          : Colors.transparent,
-                                    ),
-                                    cells: <DataCell>[
-                                      DataCell(
-                                        Center(
+                                return DataRow(
+                                  color:
+                                  WidgetStateProperty.resolveWith(
+                                        (states) => isHighlighted
+                                        ? Colors.yellow.shade200
+                                        : Colors.transparent,
+                                  ),
+                                  cells: <DataCell>[
+                                    DataCell(
+                                      InkWell(
+                                        child: Center(
                                           child: Text(
-                                            row.code,
+                                            row.nightParty ==
+                                                false
+                                                ? 'ลงทะเบียน'
+                                                : 'เสร็จสิ้น',
                                             style: TextStyle(
-                                                fontSize: fontData),
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          row.name,
-                                          softWrap: true,
-                                          style: TextStyle(
-                                              fontSize: fontData),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Center(
-                                          child: Text(
-                                            row.nickname,
-                                            style: TextStyle(
-                                                fontSize: fontData),
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Center(
-                                          child: Text(
-                                            row.department,
-                                            style: TextStyle(
-                                                fontSize: fontData),
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        InkWell(
-                                          child: Center(
-                                            child: Text(
+                                              fontSize: fontData,
+                                              color:
                                               row.nightParty ==
                                                   false
-                                                  ? 'ลงทะเบียน'
-                                                  : 'เสร็จสิ้น',
-                                              style: TextStyle(
-                                                fontSize: fontData,
-                                                color:
-                                                row.nightParty ==
-                                                    false
-                                                    ? dataButton
-                                                    : success,
-                                              ),
+                                                  ? dataButton
+                                                  : success,
                                             ),
                                           ),
-                                          onTap: () async {
-                                            showDropdownDialog(
-                                                screenHeight,
-                                                screenWidth,
-                                                fontTitleDialog,
-                                                fontDropdown,
-                                                fontButtonDialog
-                                            );
-                                            // await EmployeeService
-                                            //     .nightPartyEmployee(
-                                            //     row.code);
-                                            // fetchEmployeeData();
-                                            // employeeCode.clear();
-                                            // name.clear();
-                                          },
+                                        ),
+                                        onTap: () async {
+                                          if(row.flagGift == true) {
+                                            if(row.nightParty == false) {
+                                              showDropdownDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  fontTitleDialog,
+                                                  fontRadio,
+                                                  fontButtonDialog,
+                                                  row.code
+                                              );
+                                              await EmployeeService
+                                                  .nightPartyEmployee(
+                                                  row.code);
+                                              fetchEmployeeData();
+                                              employeeCode.clear();
+                                              name.clear();
+                                            } else {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณจับรางวัลไปแล้ว",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            }
+                                          } else {
+                                            if(row.nightParty == false) {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                              await EmployeeService
+                                                  .nightPartyEmployee(
+                                                  row.code);
+                                              fetchEmployeeData();
+                                              employeeCode.clear();
+                                              name.clear();
+                                            } else {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณจับรางวัลไปแล้ว",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          row.code,
+                                          style: TextStyle(
+                                              fontSize: fontData),
                                         ),
                                       ),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        row.name,
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            fontSize: fontData),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          row.nickname,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          row.department,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          row.gift,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+
+                              }).toList(),
                             ),
                           ),
-                        ],
-                      ),
                     ),
 
                     //data banglen
@@ -1191,19 +1282,56 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                             ),
                                           ),
                                           onTap: () async {
-                                            showDropdownDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              fontTitleDialog,
-                                              fontDropdown,
-                                              fontButtonDialog
-                                            );
-                                            // await EmployeeService
-                                            //     .nightPartyEmployee(
-                                            //     row.code);
-                                            // fetchEmployeeData();
-                                            // employeeCode.clear();
-                                            // name.clear();
+                                            if(row.flagGift == true) {
+                                              if(row.nightParty == false) {
+                                                showDropdownDialog(
+                                                    screenHeight,
+                                                    screenWidth,
+                                                    fontTitleDialog,
+                                                    fontRadio,
+                                                    fontButtonDialog,
+                                                    row.code
+                                                );
+                                                await EmployeeService
+                                                    .nightPartyEmployee(
+                                                    row.code);
+                                                fetchEmployeeData();
+                                                employeeCode.clear();
+                                                name.clear();
+                                              } else {
+                                                errorDialog(
+                                                    screenHeight,
+                                                    screenWidth,
+                                                    "คุณจับรางวัลไปแล้ว",
+                                                    fontTitleDialog,
+                                                    fontButtonDialog
+                                                );
+                                              }
+                                            } else {
+                                              if(row.nightParty == false) {
+                                                errorDialog(
+                                                    screenHeight,
+                                                    screenWidth,
+                                                    "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                                    fontTitleDialog,
+                                                    fontButtonDialog
+                                                );
+                                                await EmployeeService
+                                                    .nightPartyEmployee(
+                                                    row.code);
+                                                fetchEmployeeData();
+                                                employeeCode.clear();
+                                                name.clear();
+                                              } else {
+                                                errorDialog(
+                                                    screenHeight,
+                                                    screenWidth,
+                                                    "คุณจับรางวัลไปแล้ว",
+                                                    fontTitleDialog,
+                                                    fontButtonDialog
+                                                );
+                                              }
+                                            }
                                           },
                                         )),
                                       ],

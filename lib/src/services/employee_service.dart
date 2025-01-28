@@ -145,7 +145,7 @@ class EmployeeService {
   static Future<Map<String, dynamic>> closeNightPartyEmployee() async {
     try {
 
-      final response = await http.put(
+      final response = await http.post(
         Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.closeNightParty),
         headers: {'Content-Type': 'application/json'},
       );
@@ -183,6 +183,33 @@ class EmployeeService {
       var body = response.body;
       result = await json.decode(body);
       print(result);
+    }
+    return result;
+
+  }
+
+  static Future<Map<String, dynamic>> addGiftEmployee(String gift, String code) async {
+    var result;
+
+    final Map<String, dynamic> giftData = {
+      'gift': gift,
+      'code' : code
+    };
+
+    print('Before sending data: ${jsonEncode(gift)} + ${jsonEncode(code)}');
+
+    final response = await http.post(
+      Uri.parse(ApiEndPoints.baseUrl +  ApiEndPoints.authEndPoints.addGift),
+      body: json.encode(giftData),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      var body = response.body;
+      result = await json.decode(body);
+      print(result);
+    } else {
+      print("Error");
     }
     return result;
 

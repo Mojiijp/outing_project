@@ -16,10 +16,8 @@ class MoreScreen extends StatefulWidget {
 }
 
 class _MoreScreenState extends State<MoreScreen> {
-  List car1 = [];
-  List car2 = [];
-  List car3 = [];
-  List car4 = [];
+  List boat1 = [];
+  List boat2 = [];
 
   List<Employee>? employeeData;
 
@@ -53,12 +51,12 @@ class _MoreScreenState extends State<MoreScreen> {
       employeeData = data;
 
       switch (username.text) {
-        case 'car1':
-          car1 = data.where((employee) => employee.boat == '1').toList();
+        case 'boat1':
+          boat1 = data.where((employee) => employee.boat == '1').toList();
           break;
 
-        case 'car2':
-          car2 = data.where((employee) => employee.boat == '2').toList();
+        case 'boat2':
+          boat2 = data.where((employee) => employee.boat == '2').toList();
           break;
 
         // case 'car3':
@@ -81,12 +79,12 @@ class _MoreScreenState extends State<MoreScreen> {
       }).toList();
 
       switch (username.text) {
-        case 'car1':
-          car1 = filteredData.where((employee) => employee.boat == '1').toList();
+        case 'boat1':
+          boat1 = filteredData.where((employee) => employee.boat == '1').toList();
           break;
 
-        case 'car2':
-          car2 = filteredData.where((employee) => employee.boat == '2').toList();
+        case 'boat2':
+          boat2 = filteredData.where((employee) => employee.boat == '2').toList();
           break;
 
         // case 'car3':
@@ -97,17 +95,17 @@ class _MoreScreenState extends State<MoreScreen> {
         //   car4 = filteredData.where((employee) => employee.boat == 'Mini Bus').toList();
         //   break;
 
-        default: car1 = filteredData.where((employee) => employee.boat == '1').toList();
+        default: boat1 = filteredData.where((employee) => employee.boat == '1').toList();
       }
     });
   }
 
   String getCarNoFromUsername(String username) {
     switch(username) {
-      case 'car1':
-        return '1';  // Example car number for 'car1'
-      case 'car2':
-        return '2';  // Example car number for 'car2'
+      case 'boat1':
+        return '1';  // Example car number for 'boat1'
+      case 'boat2':
+        return '2';  // Example car number for 'boat2'
       // case 'car3':
       //   return 'คันที่ 3';
       // case 'car4':
@@ -127,9 +125,9 @@ class _MoreScreenState extends State<MoreScreen> {
     }).toList();
 
     switch (username.text) {
-      case 'car1':
+      case 'boat1':
         return filteredData!.where((register) => register.boat == '1').length;
-      case 'car2':
+      case 'boat2':
         return filteredData!.where((register) => register.boat == '2').length;
       // case 'car3':
       //   return filteredData!.where((register) => register.boat == 'คันที่ 3').length;
@@ -145,9 +143,9 @@ class _MoreScreenState extends State<MoreScreen> {
       return 0;
     }
     switch (username.text) {
-      case 'car1':
+      case 'boat1':
         return employeeData!.where((register) => register.boat == '1').length;
-      case 'car2':
+      case 'boat2':
         return employeeData!.where((register) => register.boat == '2').length;
       // case 'car3':
       //   return employeeData!.where((register) => register.boat == 'คันที่ 3').length;
@@ -167,12 +165,12 @@ class _MoreScreenState extends State<MoreScreen> {
       }).toList();
 
       switch (username.text) {
-        case 'car1':
-          car1 = filteredData.where((employee) => employee.boat == '1').toList();
+        case 'boat1':
+          boat1 = filteredData.where((employee) => employee.boat == '1').toList();
           break;
 
-        case 'car2':
-          car2 = filteredData.where((employee) => employee.boat == '2').toList();
+        case 'boat2':
+          boat2 = filteredData.where((employee) => employee.boat == '2').toList();
           break;
 
         // case 'car3':
@@ -758,18 +756,18 @@ class _MoreScreenState extends State<MoreScreen> {
                                     List<dynamic> selectedCarData;
 
                                     switch (username.text) {
-                                      case 'car1':
-                                        selectedCarData = car1;
+                                      case 'boat1':
+                                        selectedCarData = boat1;
                                         break;
-                                      case 'car2':
-                                        selectedCarData = car2;
+                                      case 'boat2':
+                                        selectedCarData = boat2;
                                         break;
-                                      case 'car3':
-                                        selectedCarData = car3;
-                                        break;
-                                      case 'car4':
-                                        selectedCarData = car4;
-                                        break;
+                                      // case 'car3':
+                                      //   selectedCarData = car3;
+                                      //   break;
+                                      // case 'car4':
+                                      //   selectedCarData = car4;
+                                      //   break;
                                       default:
                                         selectedCarData = []; // Return an empty list if no match
                                     }
