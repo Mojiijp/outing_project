@@ -232,7 +232,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                       ),
                       ///dropdown
                       SizedBox(
-                        height: screenHeight / 5,
+                        height: screenHeight / 4,
                         width: screenWidth / 2,
                         child: Column(
                           children: <Widget>[
