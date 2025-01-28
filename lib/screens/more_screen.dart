@@ -258,7 +258,7 @@ class _MoreScreenState extends State<MoreScreen> {
     double fontSubTitle = screenWidth * 0.035;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.025;
+    double fontData = screenWidth * 0.03;
     double fontTitleDialog = screenWidth * 0.06;
     double fontButtonDialog = screenWidth * 0.05;
 
@@ -652,214 +652,209 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                       Visibility(
                         visible: isVisibleCar,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: employeeData == null
-                                  ? Center(
-                                child: SizedBox(
-                                  width:
-                                  50, // ขนาดของ CircularProgressIndicator
-                                  height: 50,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4, // ลดความหนาของเส้น
-                                    valueColor:
-                                    AlwaysStoppedAnimation<Color>(
-                                        const Color.fromARGB(255, 255,
-                                            145, 182)), // สี
-                                  ),
+                        child: employeeData == null
+                            ? Center(
+                          child: SizedBox(
+                            width:
+                            50, // ขนาดของ CircularProgressIndicator
+                            height: 50,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 4, // ลดความหนาของเส้น
+                              valueColor:
+                              AlwaysStoppedAnimation<Color>(
+                                  const Color.fromARGB(255, 255,
+                                      145, 182)), // สี
+                            ),
+                          ),
+                        )
+                            : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                                headingRowColor:
+                                WidgetStateProperty.resolveWith(
+                                        (states) =>
+                                    Colors.teal.shade100),
+                                dataRowColor:
+                                WidgetStateProperty.resolveWith(
+                                        (states) => Colors.teal.shade50),
+                                horizontalMargin: 10,
+                                columnSpacing: 30,
+                                border: TableBorder.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
                                 ),
-                              )
-                                  : FittedBox(
-                                child: DataTable(
-                                  headingRowColor:
-                                  WidgetStateProperty.resolveWith(
-                                          (states) =>
-                                      Colors.teal.shade100),
-                                  dataRowColor:
-                                  WidgetStateProperty.resolveWith(
-                                          (states) => Colors.teal.shade50),
-                                  horizontalMargin: 10,
-                                  columnSpacing: 30,
-                                  border: TableBorder.all(
-                                    color: Colors.grey.shade300,
-                                    width: 1,
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'สถานะ',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  columns: <DataColumn>[
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'รหัส',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'รหัส',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'ชื่อ-นามสกุล',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อ-นามสกุล',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'ชื่อเล่น',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อเล่น',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'สี',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'สี',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'สถานะ',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight.w500),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                  rows: (() {
-                                    List<dynamic> selectedCarData;
+                                  ),
+                                ],
+                                rows: (() {
+                                  List<dynamic> selectedCarData;
 
-                                    switch (username.text) {
-                                      case 'boat1':
-                                        selectedCarData = boat1;
-                                        break;
-                                      case 'boat2':
-                                        selectedCarData = boat2;
-                                        break;
-                                      // case 'car3':
-                                      //   selectedCarData = car3;
-                                      //   break;
-                                      // case 'car4':
-                                      //   selectedCarData = car4;
-                                      //   break;
-                                      default:
-                                        selectedCarData = []; // Return an empty list if no match
-                                    }
+                                  switch (username.text) {
+                                    case 'boat1':
+                                      selectedCarData = boat1;
+                                      break;
+                                    case 'boat2':
+                                      selectedCarData = boat2;
+                                      break;
+                                    // case 'car3':
+                                    //   selectedCarData = car3;
+                                    //   break;
+                                    // case 'car4':
+                                    //   selectedCarData = car4;
+                                    //   break;
+                                    default:
+                                      selectedCarData = []; // Return an empty list if no match
+                                  }
 
-                                    // ตรวจสอบว่า selectedCarData เป็นลิสต์ว่างหรือไม่
-                                    if (selectedCarData.isEmpty) {
-                                      return [
-                                        DataRow(cells: [
-                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                          DataCell(Text('ไม่พบข้อมูล', style: TextStyle(fontSize: fontData, color: buttonClose))),
-                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                          DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                          // คุณสามารถเพิ่ม DataCell อื่นๆ ในที่นี้ได้ตามต้องการ
-                                        ])
-                                      ];
-                                    } else {
-                                      return selectedCarData.map<DataRow>((row) {
-                                        bool isHighlighted =
-                                            searchedEmployeeCode ==
-                                                row.code;
-                                        return DataRow(
-                                          color: WidgetStateProperty
-                                              .resolveWith(
-                                                (states) => isHighlighted
-                                                ? Colors.yellow.shade200
-                                                : Colors.transparent,
-                                          ),
-                                          cells: <DataCell>[
-                                            DataCell(
-                                              Center(
+                                  // ตรวจสอบว่า selectedCarData เป็นลิสต์ว่างหรือไม่
+                                  if (selectedCarData.isEmpty) {
+                                    return [
+                                      DataRow(cells: [
+                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('ไม่พบข้อมูล', style: TextStyle(fontSize: fontData, color: buttonClose))),
+                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        // คุณสามารถเพิ่ม DataCell อื่นๆ ในที่นี้ได้ตามต้องการ
+                                      ])
+                                    ];
+                                  } else {
+                                    return selectedCarData.map<DataRow>((row) {
+                                      bool isHighlighted =
+                                          searchedEmployeeCode ==
+                                              row.code;
+                                      return DataRow(
+                                        color: WidgetStateProperty
+                                            .resolveWith(
+                                              (states) => isHighlighted
+                                              ? Colors.yellow.shade200
+                                              : Colors.transparent,
+                                        ),
+                                        cells: <DataCell>[
+                                          DataCell(
+                                            InkWell(
+                                              child: Center(
                                                 child: Text(
-                                                  row.code,
-                                                  style: TextStyle(fontSize: fontData),
-                                                ),
-                                              ),
-                                            ),
-                                            DataCell(
-                                              Text(
-                                                row.name,
-                                                softWrap: true,
-                                                style: TextStyle(fontSize: fontData),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            ),
-                                            DataCell(
-                                              Center(
-                                                child: Text(
-                                                  row.nickname,
-                                                  style: TextStyle(fontSize: fontData),
-                                                ),
-                                              ),
-                                            ),
-                                            DataCell(
-                                              Center(
-                                                child: Text(
-                                                  row.color,
-                                                  style: TextStyle(fontSize: fontData),
-                                                ),
-                                              ),
-                                            ),
-                                            DataCell(
-                                              InkWell(
-                                                child: Center(
-                                                  child: Text(
-                                                    row.checkBoat == false ? 'Check in' : 'เสร็จสิ้น',
-                                                    style: TextStyle(
-                                                      fontSize: fontData,
-                                                      color: row.checkBoat == false ? dataButton : success,
-                                                    ),
+                                                  row.checkBoat == false ? 'Check in' : 'เสร็จสิ้น',
+                                                  style: TextStyle(
+                                                    fontSize: fontData,
+                                                    color: row.checkBoat == false ? dataButton : success,
                                                   ),
                                                 ),
-                                                onTap: ()  async {
-                                                  await EmployeeService.checkInBoat(row.code).whenComplete(() {
-                                                    fetchEmployeeData();
-                                                  });
-                                                  employeeCode.clear();
-                                                  barcode.clear();
-                                                  // Handle your onTap logic here
-                                                },
+                                              ),
+                                              onTap: ()  async {
+                                                await EmployeeService.checkInBoat(row.code).whenComplete(() {
+                                                  fetchEmployeeData();
+                                                });
+                                                employeeCode.clear();
+                                                barcode.clear();
+                                                // Handle your onTap logic here
+                                              },
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: Text(
+                                                row.code,
+                                                style: TextStyle(fontSize: fontData),
                                               ),
                                             ),
-                                          ],
-                                        );
-                                      }).toList();
-                                    }
-                                  })(),
-                                ),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                              row.name,
+                                              softWrap: true,
+                                              style: TextStyle(fontSize: fontData),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: Text(
+                                                row.nickname,
+                                                style: TextStyle(fontSize: fontData),
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: Text(
+                                                row.color,
+                                                style: TextStyle(fontSize: fontData),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    }).toList();
+                                  }
+                                })(),
                               ),
                             ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
