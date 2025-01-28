@@ -756,26 +756,24 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                 fontSize: fontTitle, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            fetchEmployeeData();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                      "รีเฟรชข้อมูลสำเร็จ",
-                                      style: TextStyle(fontSize: fontInputText),
-                                    )
-                                )
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
-                            // child: Text(
-                            //   "รีเฟรช",
-                            //   style: TextStyle(
-                            //       fontSize: fontTitle, fontWeight: FontWeight.bold),
-                            // ),
+                        Tooltip(
+                          message: 'รีเฟรชข้อมูล',
+                          child: InkWell(
+                            onTap: () {
+                              fetchEmployeeData();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                        "รีเฟรชข้อมูลสำเร็จ",
+                                        style: TextStyle(fontSize: fontInputText),
+                                      )
+                                  )
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
+                            ),
                           ),
                         ),
                       ],
@@ -1116,249 +1114,265 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                     ),
                     Visibility(
                       visible: isVisibleBangLen,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: employeeData == null
-                                ? Center(
-                              child: SizedBox(
-                                width:
-                                50, // ขนาดของ CircularProgressIndicator
-                                height: 50,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 4, // ลดความหนาของเส้น
-                                  valueColor:
-                                  AlwaysStoppedAnimation<Color>(
-                                      const Color.fromARGB(255, 255,
-                                          145, 182)), // สี
+                      child: employeeData == null
+                          ? Center(
+                        child: SizedBox(
+                          width:
+                          50, // ขนาดของ CircularProgressIndicator
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 4, // ลดความหนาของเส้น
+                            valueColor:
+                            AlwaysStoppedAnimation<Color>(
+                                const Color.fromARGB(255, 255,
+                                    145, 182)), // สี
+                          ),
+                        ),
+                      )
+                          : employeeData != null
+                              ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                headingRowColor:
+                                WidgetStateProperty
+                                    .resolveWith((states) =>
+                                Colors.teal.shade100),
+                                dataRowColor: WidgetStateProperty
+                                    .resolveWith((states) =>
+                                    Colors.teal.shade50
+                                        .withOpacity(0.5)),
+                                horizontalMargin: 20,
+                                columnSpacing: 30,
+                                border: TableBorder.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
                                 ),
-                              ),
-                            )
-                                : FittedBox(
-                              child: employeeData != null
-                                  ? DataTable(
-                                  headingRowColor:
-                                  WidgetStateProperty
-                                      .resolveWith((states) =>
-                                  Colors.teal.shade100),
-                                  dataRowColor: WidgetStateProperty
-                                      .resolveWith((states) =>
-                                      Colors.teal.shade50
-                                          .withOpacity(0.5)),
-                                  horizontalMargin: 20,
-                                  columnSpacing: 30,
-                                  border: TableBorder.all(
-                                    color: Colors.grey.shade300,
-                                    width: 1,
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'สถานะ',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  columns: <DataColumn>[
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'รหัส',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500),
-                                          ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'รหัส',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'ชื่อ-นามสกุล',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อ-นามสกุล',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'ชื่อเล่น',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อเล่น',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'แผนก',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'แผนก',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
                                         ),
                                       ),
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'สถานะ',
-                                            style: TextStyle(
-                                                fontSize: fontData,
-                                                fontWeight:
-                                                FontWeight
-                                                    .w500),
-                                          ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'รางวัล',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                  rows: officeBanglen.map((row) {
-                                    bool isHighlighted =
-                                        searchedEmployeeCode ==
-                                            row.code;
+                                  ),
+                                ],
+                                rows: officeBanglen.map((row) {
+                                  bool isHighlighted =
+                                      searchedEmployeeCode ==
+                                          row.code;
 
-                                    return DataRow(
-                                      color: WidgetStateProperty
-                                          .resolveWith(
-                                            (states) => isHighlighted
-                                            ? Colors.yellow.shade200
-                                            : Colors.transparent,
-                                      ),
-                                      cells: <DataCell>[
-                                        DataCell(Center(
+                                  return DataRow(
+                                    color: WidgetStateProperty
+                                        .resolveWith(
+                                          (states) => isHighlighted
+                                          ? Colors.yellow.shade200
+                                          : Colors.transparent,
+                                    ),
+                                    cells: <DataCell>[
+                                      DataCell(InkWell(
+                                        child: Center(
                                           child: Text(
-                                            row.code,
+                                            row.nightParty ==
+                                                false
+                                                ? 'ลงทะเบียน'
+                                                : 'เสร็จสิ้น',
                                             style: TextStyle(
-                                                fontSize: fontData),
+                                                fontSize:
+                                                fontData,
+                                                color: row.nightParty ==
+                                                    false
+                                                    ? dataButton
+                                                    : success),
                                           ),
-                                        )),
-                                        DataCell(Text(
-                                          row.name,
-                                          softWrap: true,
+                                        ),
+                                        onTap: () async {
+                                          if(row.flagGift == true) {
+                                            if(row.nightParty == false) {
+                                              showDropdownDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  fontTitleDialog,
+                                                  fontRadio,
+                                                  fontButtonDialog,
+                                                  row.code
+                                              );
+                                              await EmployeeService
+                                                  .nightPartyEmployee(
+                                                  row.code);
+                                              fetchEmployeeData();
+                                              employeeCode.clear();
+                                              name.clear();
+                                            } else {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณจับรางวัลไปแล้ว",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            }
+                                          } else {
+                                            if(row.nightParty == false) {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                              await EmployeeService
+                                                  .nightPartyEmployee(
+                                                  row.code);
+                                              fetchEmployeeData();
+                                              employeeCode.clear();
+                                              name.clear();
+                                            } else {
+                                              errorDialog(
+                                                  screenHeight,
+                                                  screenWidth,
+                                                  "คุณจับรางวัลไปแล้ว",
+                                                  fontTitleDialog,
+                                                  fontButtonDialog
+                                              );
+                                            }
+                                          }
+                                        },
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(
+                                          row.code,
                                           style: TextStyle(
                                               fontSize: fontData),
-                                          textAlign:
-                                          TextAlign.start,
-                                        )),
-                                        DataCell(Center(
-                                          child: Text(
-                                            row.nickname,
-                                            style: TextStyle(
-                                                fontSize: fontData),
-                                          ),
-                                        )),
-                                        DataCell(Center(
-                                          child: Text(
-                                            row.department,
-                                            style: TextStyle(
-                                                fontSize: fontData),
-                                          ),
-                                        )),
-                                        DataCell(InkWell(
-                                          child: Center(
-                                            child: Text(
-                                              row.nightParty ==
-                                                  false
-                                                  ? 'ลงทะเบียน'
-                                                  : 'เสร็จสิ้น',
-                                              style: TextStyle(
-                                                  fontSize:
-                                                  fontData,
-                                                  color: row.nightParty ==
-                                                      false
-                                                      ? dataButton
-                                                      : success),
-                                            ),
-                                          ),
-                                          onTap: () async {
-                                            if(row.flagGift == true) {
-                                              if(row.nightParty == false) {
-                                                showDropdownDialog(
-                                                    screenHeight,
-                                                    screenWidth,
-                                                    fontTitleDialog,
-                                                    fontRadio,
-                                                    fontButtonDialog,
-                                                    row.code
-                                                );
-                                                await EmployeeService
-                                                    .nightPartyEmployee(
-                                                    row.code);
-                                                fetchEmployeeData();
-                                                employeeCode.clear();
-                                                name.clear();
-                                              } else {
-                                                errorDialog(
-                                                    screenHeight,
-                                                    screenWidth,
-                                                    "คุณจับรางวัลไปแล้ว",
-                                                    fontTitleDialog,
-                                                    fontButtonDialog
-                                                );
-                                              }
-                                            } else {
-                                              if(row.nightParty == false) {
-                                                errorDialog(
-                                                    screenHeight,
-                                                    screenWidth,
-                                                    "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                                    fontTitleDialog,
-                                                    fontButtonDialog
-                                                );
-                                                await EmployeeService
-                                                    .nightPartyEmployee(
-                                                    row.code);
-                                                fetchEmployeeData();
-                                                employeeCode.clear();
-                                                name.clear();
-                                              } else {
-                                                errorDialog(
-                                                    screenHeight,
-                                                    screenWidth,
-                                                    "คุณจับรางวัลไปแล้ว",
-                                                    fontTitleDialog,
-                                                    fontButtonDialog
-                                                );
-                                              }
-                                            }
-                                          },
-                                        )),
-                                      ],
-                                    );
-                                  }).toList())
-                                  : Center(
-                                child: SizedBox(
-                                  width: 10,
-                                  height: 10,
-                                  child:
-                                  CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor:
-                                    AlwaysStoppedAnimation<
-                                        Color>(
-                                        const Color.fromARGB(
-                                            255,
-                                            255,
-                                            167,
-                                            196)),
-                                  ),
-                                ),
+                                        ),
+                                      )),
+                                      DataCell(Text(
+                                        row.name,
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            fontSize: fontData),
+                                        textAlign:
+                                        TextAlign.start,
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(
+                                          row.nickname,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(
+                                          row.department,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      )),
+                                      DataCell(Center(
+                                        child: Text(
+                                          row.gift,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                        ),
+                                      )),
+                                    ],
+                                  );
+                                }).toList()),
+                              )
+                              : Center(
+                            child: SizedBox(
+                              width: 10,
+                              height: 10,
+                              child:
+                              CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                AlwaysStoppedAnimation<
+                                    Color>(
+                                    const Color.fromARGB(
+                                        255,
+                                        255,
+                                        167,
+                                        196)),
                               ),
                             ),
                           ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
