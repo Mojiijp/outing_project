@@ -75,7 +75,7 @@ class _MoreScreenState extends State<MoreScreen> {
   void empNotRegisData() {
     setState(() {
       var filteredData = employeeData!.where((employee) {
-        return employee.checkIn == false;
+        return employee.checkBoat == false;
       }).toList();
 
       switch (username.text) {
