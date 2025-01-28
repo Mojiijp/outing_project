@@ -152,7 +152,7 @@ class _OutingScreenState extends State<OutingScreen> {
     double fontSubTitle = screenWidth * 0.035;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.025;
+    double fontData = screenWidth * 0.03;
 
     return SafeArea(
       child: Scaffold(
@@ -486,13 +486,39 @@ class _OutingScreenState extends State<OutingScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //data talingchan
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Text(
-                          "สำนักงานใหญ่ (ตลิ่งชัน)",
-                          style: TextStyle(
-                              fontSize: fontTitle, fontWeight: FontWeight.bold),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text(
+                              "สำนักงานใหญ่ (ตลิ่งชัน)",
+                              style: TextStyle(
+                                  fontSize: fontTitle, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Tooltip(
+                            message: 'รีเฟรชข้อมูล',
+                            child: InkWell(
+                              onTap: () {
+                                fetchEmployeeData();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                          "รีเฟรชข้อมูลสำเร็จ",
+                                          style: TextStyle(fontSize: fontInputText),
+                                        )
+                                    )
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -534,189 +560,184 @@ class _OutingScreenState extends State<OutingScreen> {
                       ),
                       Visibility(
                         visible: isVisibleTalingChan,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: employeeData == null
-                                  ? Center(
-                                      child: SizedBox(
-                                        width: 50,
-                                        height: 50,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 4, // ลดความหนาของเส้น
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  const Color.fromARGB(255, 255,
-                                                      145, 182)), // สี
+                        child: employeeData == null
+                            ? Center(
+                                child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4, // ลดความหนาของเส้น
+                                    valueColor:
+                                        AlwaysStoppedAnimation<Color>(
+                                            const Color.fromARGB(255, 255,
+                                                145, 182)), // สี
+                                  ),
+                                ),
+                              )
+                            : SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                              child: DataTable(
+                                headingRowColor:
+                                    WidgetStateProperty.resolveWith(
+                                        (states) =>
+                                            Colors.teal.shade100),
+                                dataRowColor:
+                                    WidgetStateProperty.resolveWith(
+                                        (states) => Colors.teal.shade50),
+                                horizontalMargin: 10,
+                                columnSpacing: 30,
+                                border: TableBorder.all(
+                                  color: Colors.grey.shade300,
+                                  width: 1,
+                                ),
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'สถานะ',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                              FontWeight.w500),
                                         ),
-                                      ),
-                                    )
-                                  : FittedBox(
-                                      child: DataTable(
-                                        headingRowColor:
-                                            WidgetStateProperty.resolveWith(
-                                                (states) =>
-                                                    Colors.teal.shade100),
-                                        dataRowColor:
-                                            WidgetStateProperty.resolveWith(
-                                                (states) => Colors.teal.shade50),
-                                        horizontalMargin: 10,
-                                        columnSpacing: 30,
-                                        border: TableBorder.all(
-                                          color: Colors.grey.shade300,
-                                          width: 1,
-                                        ),
-                                        columns: <DataColumn>[
-                                          DataColumn(
-                                            label: Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'รหัส',
-                                                  style: TextStyle(
-                                                      fontSize: fontData,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'ชื่อ-นามสกุล',
-                                                  style: TextStyle(
-                                                      fontSize: fontData,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'ชื่อเล่น',
-                                                  style: TextStyle(
-                                                      fontSize: fontData,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'แผนก',
-                                                  style: TextStyle(
-                                                      fontSize: fontData,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Expanded(
-                                              child: Center(
-                                                child: Text(
-                                                  'สถานะ',
-                                                  style: TextStyle(
-                                                      fontSize: fontData,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                        rows: officeTaLingChan.map((row) {
-                                          bool isHighlighted =
-                                              searchedEmployeeCode == row.code;
-
-                                          return DataRow(
-                                            color:
-                                                WidgetStateProperty.resolveWith(
-                                              (states) => isHighlighted
-                                                  ? Colors.yellow.shade200
-                                                  : Colors.transparent,
-                                            ),
-                                            cells: <DataCell>[
-                                              DataCell(
-                                                Center(
-                                                  child: Text(
-                                                    row.code,
-                                                    style: TextStyle(
-                                                        fontSize: fontData),
-                                                  ),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Text(
-                                                  row.name,
-                                                  softWrap: true,
-                                                  style: TextStyle(
-                                                      fontSize: fontData),
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Center(
-                                                  child: Text(
-                                                    row.nickname,
-                                                    style: TextStyle(
-                                                        fontSize: fontData),
-                                                  ),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                Center(
-                                                  child: Text(
-                                                    row.department,
-                                                    style: TextStyle(
-                                                        fontSize: fontData),
-                                                  ),
-                                                ),
-                                              ),
-                                              DataCell(
-                                                InkWell(
-                                                  child: Center(
-                                                    child: Text(
-                                                      row.outingStatus ==
-                                                              false
-                                                          ? 'ลงทะเบียน'
-                                                          : 'เสร็จสิ้น',
-                                                      style: TextStyle(
-                                                        fontSize: fontData,
-                                                        color:
-                                                            row.outingStatus ==
-                                                                    false
-                                                                ? dataButton
-                                                                : success,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  onTap: () async {
-                                                    await EmployeeService
-                                                        .registerEmployee(
-                                                            row.code);
-                                                    fetchEmployeeData();
-                                                    employeeCode.clear();
-                                                    name.clear();
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }).toList(),
                                       ),
                                     ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'รหัส',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                                  FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อ-นามสกุล',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                                  FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'ชื่อเล่น',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                                  FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'แผนก',
+                                          style: TextStyle(
+                                              fontSize: fontData,
+                                              fontWeight:
+                                                  FontWeight.w500),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                rows: officeTaLingChan.map((row) {
+                                  bool isHighlighted =
+                                      searchedEmployeeCode == row.code;
+
+                                  return DataRow(
+                                    color:
+                                        WidgetStateProperty.resolveWith(
+                                      (states) => isHighlighted
+                                          ? Colors.yellow.shade200
+                                          : Colors.transparent,
+                                    ),
+                                    cells: <DataCell>[
+                                      DataCell(
+                                        InkWell(
+                                          child: Center(
+                                            child: Text(
+                                              row.outingStatus ==
+                                                  false
+                                                  ? 'ลงทะเบียน'
+                                                  : 'เสร็จสิ้น',
+                                              style: TextStyle(
+                                                fontSize: fontData,
+                                                color:
+                                                row.outingStatus ==
+                                                    false
+                                                    ? dataButton
+                                                    : success,
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () async {
+                                            await EmployeeService
+                                                .registerEmployee(
+                                                row.code);
+                                            fetchEmployeeData();
+                                            employeeCode.clear();
+                                            name.clear();
+                                          },
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Center(
+                                          child: Text(
+                                            row.code,
+                                            style: TextStyle(
+                                                fontSize: fontData),
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          row.name,
+                                          softWrap: true,
+                                          style: TextStyle(
+                                              fontSize: fontData),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Center(
+                                          child: Text(
+                                            row.nickname,
+                                            style: TextStyle(
+                                                fontSize: fontData),
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Center(
+                                          child: Text(
+                                            row.department,
+                                            style: TextStyle(
+                                                fontSize: fontData),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                          ],
-                        ),
                       ),
 
                       //data banglen
@@ -786,184 +807,185 @@ class _OutingScreenState extends State<OutingScreen> {
                                         ),
                                       ),
                                     )
-                                  : FittedBox(
-                                      child: employeeData != null
-                                          ? DataTable(
-                                              headingRowColor:
-                                                  WidgetStateProperty
-                                                      .resolveWith((states) =>
-                                                          Colors.teal.shade100),
-                                              dataRowColor: WidgetStateProperty
-                                                  .resolveWith((states) =>
-                                                      Colors.teal.shade50
-                                                          .withOpacity(0.5)),
-                                              horizontalMargin: 20,
-                                              columnSpacing: 30,
-                                              border: TableBorder.all(
-                                                color: Colors.grey.shade300,
-                                                width: 1,
+                                  : employeeData != null
+                                      ? SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: DataTable(
+                                            headingRowColor:
+                                                WidgetStateProperty
+                                                    .resolveWith((states) =>
+                                                        Colors.teal.shade100),
+                                            dataRowColor: WidgetStateProperty
+                                                .resolveWith((states) =>
+                                                    Colors.teal.shade50
+                                                        .withOpacity(0.5)),
+                                            horizontalMargin: 20,
+                                            columnSpacing: 30,
+                                            border: TableBorder.all(
+                                              color: Colors.grey.shade300,
+                                              width: 1,
+                                            ),
+                                            columns: <DataColumn>[
+                                              DataColumn(
+                                                label: Expanded(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'สถานะ',
+                                                      style: TextStyle(
+                                                          fontSize: fontData,
+                                                          fontWeight:
+                                                          FontWeight
+                                                              .w500),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                              columns: <DataColumn>[
-                                                DataColumn(
-                                                  label: Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'รหัส',
-                                                        style: TextStyle(
-                                                            fontSize: fontData,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
+                                              DataColumn(
+                                                label: Expanded(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'รหัส',
+                                                      style: TextStyle(
+                                                          fontSize: fontData,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w500),
                                                     ),
                                                   ),
                                                 ),
-                                                DataColumn(
-                                                  label: Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'ชื่อ-นามสกุล',
-                                                        style: TextStyle(
-                                                            fontSize: fontData,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
+                                              ),
+                                              DataColumn(
+                                                label: Expanded(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'ชื่อ-นามสกุล',
+                                                      style: TextStyle(
+                                                          fontSize: fontData,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w500),
                                                     ),
                                                   ),
                                                 ),
-                                                DataColumn(
-                                                  label: Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'ชื่อเล่น',
-                                                        style: TextStyle(
-                                                            fontSize: fontData,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
+                                              ),
+                                              DataColumn(
+                                                label: Expanded(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'ชื่อเล่น',
+                                                      style: TextStyle(
+                                                          fontSize: fontData,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w500),
                                                     ),
                                                   ),
                                                 ),
-                                                DataColumn(
-                                                  label: Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'แผนก',
-                                                        style: TextStyle(
-                                                            fontSize: fontData,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
+                                              ),
+                                              DataColumn(
+                                                label: Expanded(
+                                                  child: Center(
+                                                    child: Text(
+                                                      'แผนก',
+                                                      style: TextStyle(
+                                                          fontSize: fontData,
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .w500),
                                                     ),
                                                   ),
                                                 ),
-                                                DataColumn(
-                                                  label: Expanded(
-                                                    child: Center(
-                                                      child: Text(
-                                                        'สถานะ',
-                                                        style: TextStyle(
-                                                            fontSize: fontData,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                              rows: officeBanglen.map((row) {
-                                                bool isHighlighted =
-                                                    searchedEmployeeCode ==
-                                                        row.code;
+                                              ),
+                                            ],
+                                            rows: officeBanglen.map((row) {
+                                              bool isHighlighted =
+                                                  searchedEmployeeCode ==
+                                                      row.code;
 
-                                                return DataRow(
-                                                  color: WidgetStateProperty
-                                                      .resolveWith(
-                                                    (states) => isHighlighted
-                                                        ? Colors.yellow.shade200
-                                                        : Colors.transparent,
-                                                  ),
-                                                  cells: <DataCell>[
-                                                    DataCell(Center(
+                                              return DataRow(
+                                                color: WidgetStateProperty
+                                                    .resolveWith(
+                                                  (states) => isHighlighted
+                                                      ? Colors.yellow.shade200
+                                                      : Colors.transparent,
+                                                ),
+                                                cells: <DataCell>[
+                                                  DataCell(InkWell(
+                                                    child: Center(
                                                       child: Text(
-                                                        row.code,
+                                                        row.outingStatus ==
+                                                            false
+                                                            ? 'ลงทะเบียน'
+                                                            : 'เสร็จสิ้น',
                                                         style: TextStyle(
-                                                            fontSize: fontData),
+                                                            fontSize:
+                                                            fontData,
+                                                            color: row.outingStatus ==
+                                                                false
+                                                                ? dataButton
+                                                                : success),
                                                       ),
-                                                    )),
-                                                    DataCell(Text(
-                                                      row.name,
-                                                      softWrap: true,
+                                                    ),
+                                                    onTap: () async {
+                                                      await EmployeeService
+                                                          .registerEmployee(
+                                                          row.code);
+                                                      fetchEmployeeData();
+                                                      employeeCode.clear();
+                                                      name.clear();
+                                                    },
+                                                  )),
+                                                  DataCell(Center(
+                                                    child: Text(
+                                                      row.code,
                                                       style: TextStyle(
                                                           fontSize: fontData),
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    )),
-                                                    DataCell(Center(
-                                                      child: Text(
-                                                        row.nickname,
-                                                        style: TextStyle(
-                                                            fontSize: fontData),
-                                                      ),
-                                                    )),
-                                                    DataCell(Center(
-                                                      child: Text(
-                                                        row.department,
-                                                        style: TextStyle(
-                                                            fontSize: fontData),
-                                                      ),
-                                                    )),
-                                                    DataCell(InkWell(
-                                                      child: Center(
-                                                        child: Text(
-                                                          row.outingStatus ==
-                                                                  false
-                                                              ? 'ลงทะเบียน'
-                                                              : 'เสร็จสิ้น',
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  fontData,
-                                                              color: row.outingStatus ==
-                                                                      false
-                                                                  ? dataButton
-                                                                  : success),
-                                                        ),
-                                                      ),
-                                                      onTap: () async {
-                                                        await EmployeeService
-                                                            .registerEmployee(
-                                                                row.code);
-                                                        fetchEmployeeData();
-                                                        employeeCode.clear();
-                                                        name.clear();
-                                                      },
-                                                    )),
-                                                  ],
-                                                );
-                                              }).toList())
-                                          : Center(
-                                              child: SizedBox(
-                                                width: 10,
-                                                height: 10,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                              Color>(
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              167,
-                                                              196)),
-                                                ),
-                                              ),
+                                                    ),
+                                                  )),
+                                                  DataCell(Text(
+                                                    row.name,
+                                                    softWrap: true,
+                                                    style: TextStyle(
+                                                        fontSize: fontData),
+                                                    textAlign:
+                                                        TextAlign.start,
+                                                  )),
+                                                  DataCell(Center(
+                                                    child: Text(
+                                                      row.nickname,
+                                                      style: TextStyle(
+                                                          fontSize: fontData),
+                                                    ),
+                                                  )),
+                                                  DataCell(Center(
+                                                    child: Text(
+                                                      row.department,
+                                                      style: TextStyle(
+                                                          fontSize: fontData),
+                                                    ),
+                                                  )),
+                                                ],
+                                              );
+                                            }).toList()),
+                                      )
+                                      : Center(
+                                          child: SizedBox(
+                                            width: 10,
+                                            height: 10,
+                                            child:
+                                                CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<
+                                                          Color>(
+                                                      const Color.fromARGB(
+                                                          255,
+                                                          255,
+                                                          167,
+                                                          196)),
                                             ),
-                                    ),
+                                          ),
+                                        ),
                             ),
                           ],
                         ),
