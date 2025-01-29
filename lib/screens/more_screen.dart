@@ -44,7 +44,6 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   void fetchEmployeeData() async {
-    // ดึงข้อมูลพนักงานทั้งหมดจาก API
     var data = await EmployeeService.getAllEmployee();
 
     setState(() {
@@ -52,22 +51,14 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = data.where((employee) => employee.boat == 'JP4').toList();
+          boat1 = data.where((employee) => employee.boat == 'JP4' || employee.boat == 'VIP').toList();
           break;
 
         case 'boat2':
-          boat2 = data.where((employee) => employee.boat == 'JP5').toList();
+          boat2 = data.where((employee) => employee.boat == 'JP5' || employee.boat == 'VIP').toList();
           break;
 
-        // case 'car3':
-        //   car3 = data.where((employee) => employee.boat == 'คันที่ 3').toList();
-        //   break;
-        //
-        // case 'car4':
-        //   car4 = data.where((employee) => employee.boat == 'Mini Bus').toList();
-        //   break;
-
-        default: print('Username does not match any car');
+        default: print('Username does not match any boat');
       }
     });
   }
@@ -80,22 +71,14 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
+          boat1 = filteredData.where((employee) => employee.boat == 'JP4' || employee.boat == 'VIP').toList();
           break;
 
         case 'boat2':
-          boat2 = filteredData.where((employee) => employee.boat == 'JP5').toList();
+          boat2 = filteredData.where((employee) => employee.boat == 'JP5' || employee.boat == 'VIP').toList();
           break;
 
-        // case 'car3':
-        //   car3 = filteredData.where((employee) => employee.boat == 'คันที่ 3').toList();
-        //   break;
-        //
-        // case 'car4':
-        //   car4 = filteredData.where((employee) => employee.boat == 'Mini Bus').toList();
-        //   break;
-
-        default: boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
+        default: boat1 = filteredData.where((employee) => employee.boat == 'JP4' || employee.boat == 'VIP').toList();
       }
     });
   }
@@ -105,11 +88,7 @@ class _MoreScreenState extends State<MoreScreen> {
       case 'boat1':
         return 'JP4';  // Example car number for 'boat1'
       case 'boat2':
-        return 'JP5';  // Example car number for 'boat2'
-      // case 'car3':
-      //   return 'คันที่ 3';
-      // case 'car4':
-      //   return 'Mini Bus';  // Example car number for 'car3'
+        return 'JP5';
       default:
         return 'JP4'; // Return 'Unknown' if username doesn't match any case
     }
@@ -126,13 +105,9 @@ class _MoreScreenState extends State<MoreScreen> {
 
     switch (username.text) {
       case 'boat1':
-        return filteredData!.where((register) => register.boat == 'JP4').length;
+        return filteredData!.where((register) => register.boat == 'JP4' || register.boat == 'VIP').length;
       case 'boat2':
-        return filteredData!.where((register) => register.boat == 'JP5').length;
-      // case 'car3':
-      //   return filteredData!.where((register) => register.boat == 'คันที่ 3').length;
-      // case 'car4':
-      //   return filteredData!.where((register) => register.boat == 'Mini Bus').length;
+        return filteredData!.where((register) => register.boat == 'JP5' || register.boat == 'VIP').length;
       default:
         return 0;  // Return 0 if the username doesn't match any car
     }
@@ -144,15 +119,11 @@ class _MoreScreenState extends State<MoreScreen> {
     }
     switch (username.text) {
       case 'boat1':
-        return employeeData!.where((register) => register.boat == 'JP4').length;
+        return employeeData!.where((register) => register.boat == 'JP4' || register.boat == 'VIP').length;
       case 'boat2':
-        return employeeData!.where((register) => register.boat == 'JP5').length;
-      // case 'car3':
-      //   return employeeData!.where((register) => register.boat == 'คันที่ 3').length;
-      // case 'car4':
-      //   return employeeData!.where((register) => register.boat == 'Mini Bus').length;
+        return employeeData!.where((register) => register.boat == 'JP5' || register.boat == 'VIP').length;
       default:
-        return employeeData!.where((register) => register.boat == 'JP4').length; // Return 0 if the username doesn't match any car
+        return employeeData!.where((register) => register.boat == 'JP4' || register.boat == 'VIP').length; // Return 0 if the username doesn't match any car
     }
   }
 
@@ -166,21 +137,12 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
+          boat1 = filteredData.where((employee) => employee.boat == 'JP4'|| employee.boat == 'VIP').toList();
           break;
 
         case 'boat2':
-          boat2 = filteredData.where((employee) => employee.boat == 'JP5').toList();
+          boat2 = filteredData.where((employee) => employee.boat == 'JP5'|| employee.boat == 'VIP').toList();
           break;
-
-        // case 'car3':
-        //   car3 = filteredData.where((employee) => employee.boat == 'คันที่ 3').toList();
-        //   break;
-        //
-        // case 'car4':
-        //   car4 = filteredData.where((employee) => employee.boat == 'Mini Bus').toList();
-        //   break;
-
         default: print('Username does not match any car');
       }
       if (filteredData.isNotEmpty) {
