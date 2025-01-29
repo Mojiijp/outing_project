@@ -808,19 +808,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                     ),
                                   ),
                                 ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        'รางวัล',
-                                        style: TextStyle(
-                                            fontSize: fontData,
-                                            fontWeight:
-                                            FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                ),
                               ],
                               rows: officeTaLingChan.map((row) {
                                 bool isHighlighted =
@@ -904,15 +891,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                       Center(
                                         child: Text(
                                           row.department,
-                                          style: TextStyle(
-                                              fontSize: fontData),
-                                        ),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Center(
-                                        child: Text(
-                                          row.gift,
                                           style: TextStyle(
                                               fontSize: fontData),
                                         ),
@@ -1079,20 +1057,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                       ),
                                     ),
                                   ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          'รางวัล',
-                                          style: TextStyle(
-                                              fontSize: fontData,
-                                              fontWeight:
-                                              FontWeight
-                                                  .w500),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                                 rows: officeBanglen.map((row) {
                                   bool isHighlighted =
@@ -1168,13 +1132,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                       DataCell(Center(
                                         child: Text(
                                           row.department,
-                                          style: TextStyle(
-                                              fontSize: fontData),
-                                        ),
-                                      )),
-                                      DataCell(Center(
-                                        child: Text(
-                                          row.gift,
                                           style: TextStyle(
                                               fontSize: fontData),
                                         ),

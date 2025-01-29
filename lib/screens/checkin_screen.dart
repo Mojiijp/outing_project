@@ -55,19 +55,19 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
       switch (username.text) {
         case 'car1':
-          car1 = data.where((employee) => employee.car == 'คันที่ 1').toList();
+          car1 = data.where((employee) => employee.car == 'คันที่ 1' || employee.car == 'VIP').toList();
           break;
 
         case 'car2':
-          car2 = data.where((employee) => employee.car == 'คันที่ 2').toList();
+          car2 = data.where((employee) => employee.car == 'คันที่ 2' || employee.car == 'VIP').toList();
           break;
 
         case 'car3':
-          car3 = data.where((employee) => employee.car == 'คันที่ 3').toList();
+          car3 = data.where((employee) => employee.car == 'คันที่ 3' || employee.car == 'VIP').toList();
           break;
 
         case 'car4':
-          car4 = data.where((employee) => employee.car == 'Mini Bus').toList();
+          car4 = data.where((employee) => employee.car == 'Mini Bus' || employee.car == 'VIP').toList();
           break;
 
         default: print('Username does not match any car');
@@ -83,22 +83,22 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
       switch (username.text) {
         case 'car1':
-          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1').toList();
+          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1' || employee.car == 'VIP').toList();
           break;
 
         case 'car2':
-          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2').toList();
+          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2' || employee.car == 'VIP').toList();
           break;
 
         case 'car3':
-          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3').toList();
+          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3' || employee.car == 'VIP').toList();
           break;
 
         case 'car4':
-          car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+          car4 = filteredData.where((employee) => employee.car == 'Mini Bus' || employee.car == 'VIP').toList();
           break;
 
-        default: car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+        default: car4 = filteredData.where((employee) => employee.car == 'Mini Bus' || employee.car == 'VIP').toList();
       }
     });
   }
@@ -129,13 +129,13 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
     switch (username.text) {
       case 'car1':
-        return filteredData!.where((register) => register.car == 'คันที่ 1').length;
+        return filteredData!.where((register) => register.car == 'คันที่ 1' || register.car == 'VIP').length;
       case 'car2':
-        return filteredData!.where((register) => register.car == 'คันที่ 2').length;
+        return filteredData!.where((register) => register.car == 'คันที่ 2' || register.car == 'VIP').length;
       case 'car3':
-        return filteredData!.where((register) => register.car == 'คันที่ 3').length;
+        return filteredData!.where((register) => register.car == 'คันที่ 3' || register.car == 'VIP').length;
       case 'car4':
-        return filteredData!.where((register) => register.car == 'Mini Bus').length;
+        return filteredData!.where((register) => register.car == 'Mini Bus' || register.car == 'VIP').length;
       default:
         return 0;  // Return 0 if the username doesn't match any car
     }
@@ -147,15 +147,15 @@ class _CheckInScreenState extends State<CheckInScreen> {
     }
     switch (username.text) {
       case 'car1':
-        return employeeData!.where((register) => register.car == 'คันที่ 1').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 1' || register.car == 'VIP').length;
       case 'car2':
-        return employeeData!.where((register) => register.car == 'คันที่ 2').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 2' || register.car == 'VIP').length;
       case 'car3':
-        return employeeData!.where((register) => register.car == 'คันที่ 3').length;
+        return employeeData!.where((register) => register.car == 'คันที่ 3' || register.car == 'VIP').length;
       case 'car4':
-        return employeeData!.where((register) => register.car == 'Mini Bus').length;
+        return employeeData!.where((register) => register.car == 'Mini Bus' || register.car == 'VIP').length;
       default:
-        return employeeData!.where((register) => register.car == 'คันที่ 1').length; // Return 0 if the username doesn't match any car
+        return employeeData!.where((register) => register.car == 'คันที่ 1' || register.car == 'VIP').length; // Return 0 if the username doesn't match any car
     }
   }
 
@@ -169,19 +169,19 @@ class _CheckInScreenState extends State<CheckInScreen> {
 
       switch (username.text) {
         case 'car1':
-          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1').toList();
+          car1 = filteredData.where((employee) => employee.car == 'คันที่ 1' || employee.car == 'VIP').toList();
           break;
 
-        case 'car2':
-          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2').toList();
+        case 'car2' :
+          car2 = filteredData.where((employee) => employee.car == 'คันที่ 2' || employee.car == 'VIP').toList();
           break;
 
         case 'car3':
-          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3').toList();
+          car3 = filteredData.where((employee) => employee.car == 'คันที่ 3' || employee.car == 'VIP').toList();
           break;
 
         case 'car4':
-          car4 = filteredData.where((employee) => employee.car == 'Mini Bus').toList();
+          car4 = filteredData.where((employee) => employee.car == 'Mini Bus' || employee.car == 'VIP').toList();
           break;
 
         default: print('Username does not match any car');
