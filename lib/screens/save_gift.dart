@@ -35,6 +35,8 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
   List<Employee>? employeeData;
   List officeTaLingChan = [];
   List officeBanglen = [];
+  List listOfficeTaLingChan = [];
+  List listOfficeBanglen = [];
   String? searchedEmployeeCode;
   List lengthOfficeTaLingChan = [];
   List lengthOfficeBanglen = [];
@@ -49,20 +51,18 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
     var data = await EmployeeService.getAllEmployee();
     setState(() {
       employeeData = data;
-      lengthOfficeTaLingChan =
-          data.where((employee) => employee.office == 'ตลิ่งชัน').toList();
-      lengthOfficeBanglen =
-          data.where((employee) => employee.office == 'บางเลน').toList();
-      officeTaLingChan =
-          data.where((employee) => employee.office == 'ตลิ่งชัน').toList();
-      registerTalingchan = officeTaLingChan
-          .where((register) => register.nightParty == true)
-          .length;
-      officeBanglen =
-          data.where((employee) => employee.office == 'บางเลน').toList();
-      registerBanglen = officeBanglen
-          .where((register) => register.nightParty == true)
-          .length;
+
+      officeTaLingChan = data.where((employee) => employee.office == 'ตลิ่งชัน').toList();
+      lengthOfficeTaLingChan = officeTaLingChan.where((employee) => employee.flagGift == true).toList();
+      listOfficeTaLingChan = officeTaLingChan.where((employee) => employee.flagGift == true).toList();
+
+      officeBanglen = data.where((employee) => employee.office == 'บางเลน').toList();
+      lengthOfficeBanglen = officeBanglen.where((employee) => employee.flagGift == true).toList();
+      listOfficeBanglen = officeBanglen.where((employee) => employee.flagGift == true).toList();
+
+
+      registerTalingchan = lengthOfficeTaLingChan.where((register) => register.gift != '').length;
+      registerBanglen = lengthOfficeBanglen.where((register) => register.gift != '').length;
 
       isLoading = false; // หยุดสถานะกำลังโหลด
     });
@@ -77,6 +77,9 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
       // อัปเดตข้อมูลที่กรองแล้ว
       officeTaLingChan = filteredData.where((employee) => employee.office == 'ตลิ่งชัน').toList();
       officeBanglen = filteredData.where((employee) => employee.office == 'บางเลน').toList();
+
+      lengthOfficeTaLingChan =  officeTaLingChan.where((employee) => employee.gift == '').toList();
+      lengthOfficeBanglen =  officeBanglen.where((employee) => employee.gift == '').toList();
     });
   }
 
@@ -89,12 +92,11 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
       }).toList();
 
       // อัปเดตข้อมูลที่กรองแล้ว
-      officeTaLingChan = filteredData
-          .where((employee) => employee.office == 'ตลิ่งชัน')
-          .toList();
-      officeBanglen = filteredData
-          .where((employee) => employee.office == 'บางเลน')
-          .toList();
+      officeTaLingChan = filteredData.where((employee) => employee.office == 'ตลิ่งชัน').toList();
+      officeBanglen = filteredData.where((employee) => employee.office == 'บางเลน').toList();
+
+      lengthOfficeTaLingChan =  officeTaLingChan.where((employee) => employee.flagGift == true).toList();
+      lengthOfficeBanglen =  officeTaLingChan.where((employee) => employee.flagGift == true).toList();
 
       // ไฮไลต์แถวแรกที่ตรงกับผลการค้นหา
       if (filteredData.isNotEmpty) {
@@ -186,6 +188,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                         fetchEmployeeData();
+                        barcodeFocus.requestFocus();
                       },
                       child: Text(
                           "ตกลง",
@@ -307,7 +310,6 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                               });
                             } else {
                               await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
-                              await EmployeeService.nightPartyEmployee(code);
                               if(mounted) {
                                 character = null;
                                 fetchEmployeeData();
@@ -317,6 +319,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                 isCheckGift = false;
                               }
                               Navigator.pop(context);
+                              barcodeFocus.requestFocus();
                             }
                           },
                           child: Text(
@@ -667,96 +670,6 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                 ),
                               ],
                             )
-                            // Column(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     Text(
-                            //       "",
-                            //       style: TextStyle(
-                            //           fontSize: fontSubTitle,
-                            //           fontWeight: FontWeight.w500),
-                            //     ),
-                            //     CircleAvatar(
-                            //       backgroundColor: buttonAdd,
-                            //       foregroundColor: buttonAdd,
-                            //       radius: 20,
-                            //       child: Tooltip(
-                            //         message: 'เพิ่มรอบใหม่',
-                            //         child: IconButton(
-                            //             onPressed: () async {
-                            //               if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
-                            //                 alertDialog(
-                            //                     screenHeight,
-                            //                     screenWidth,
-                            //                     'ไม่สามารถเพิ่มรอบใหม่ได้\n ยังไม่ได้ปิดรอบ',
-                            //                     fontTitleDialog,
-                            //                     fontButtonDialog
-                            //                 );
-                            //               } else {
-                            //                 await EmployeeService.closeNightPartyEmployee();
-                            //                 fetchEmployeeData();
-                            //                 ScaffoldMessenger.of(context).showSnackBar(
-                            //                     SnackBar(
-                            //                         content: Text(
-                            //                           "เพิ่มรอบสำเร็จ",
-                            //                           style: TextStyle(fontSize: fontInputText),
-                            //                         )
-                            //                     )
-                            //                 );
-                            //               }
-                            //             },
-                            //             icon: Icon(
-                            //               Icons.add_circle,
-                            //               color: Colors.black,
-                            //             )),
-                            //       ),
-                            //     )
-                            //   ],
-                            // ),
-                            // Column(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   children: [
-                            //     Text(
-                            //       "",
-                            //       style: TextStyle(
-                            //           fontSize: fontSubTitle,
-                            //           fontWeight: FontWeight.w500),
-                            //     ),
-                            //     CircleAvatar(
-                            //       backgroundColor: buttonClose,
-                            //       foregroundColor: buttonClose,
-                            //       radius: 20,
-                            //       child: Tooltip(
-                            //         message: 'ปิดรอบ',
-                            //         child: IconButton(
-                            //             onPressed: () async {
-                            //               if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
-                            //                 alertDialog(
-                            //                     screenHeight,
-                            //                     screenWidth,
-                            //                     'ไม่สามารถปิดรอบได้\n ยังมีคนเช็คอินไม่ครบ',
-                            //                     fontTitleDialog,
-                            //                     fontButtonDialog
-                            //                 );
-                            //               } else {
-                            //                 ScaffoldMessenger.of(context).showSnackBar(
-                            //                     SnackBar(
-                            //                         content: Text(
-                            //                           "ปิดรอบสำเร็จ",
-                            //                           style: TextStyle(fontSize: fontInputText),
-                            //                         )
-                            //                     )
-                            //                 );
-                            //               }
-                            //             },
-                            //             icon: Icon(
-                            //               Icons.close_rounded,
-                            //               color: Colors.black,
-                            //             )),
-                            //       ),
-                            //     )
-                            //   ],
-                            // ),
                           ],
                         )
                       ],
@@ -816,7 +729,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20, bottom: 5),
                             child: Text(
-                              "ลงทะเบียนแล้ว $registerTalingchan / ${lengthOfficeTaLingChan.length} คน",
+                              "จับรางวัลแล้ว $registerTalingchan / ${listOfficeTaLingChan.length} คน",
                               style: TextStyle(
                                   fontSize: fontSubTitle,
                                   fontWeight: FontWeight.w500),
@@ -955,7 +868,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                               ),
                             ),
                           ],
-                          rows: officeTaLingChan.map((row) {
+                          rows: lengthOfficeTaLingChan.map((row) {
                             bool isHighlighted =
                                 searchedEmployeeCode == row.code;
 
@@ -971,71 +884,36 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                   InkWell(
                                     child: Center(
                                       child: Text(
-                                        row.nightParty ==
-                                            false
-                                            ? 'ลงทะเบียน'
+                                        row.gift == ''
+                                            ? 'บันทึก'
                                             : 'เสร็จสิ้น',
                                         style: TextStyle(
                                           fontSize: fontData,
                                           color:
-                                          row.nightParty ==
-                                              false
+                                          row.gift == ''
                                               ? dataButton
                                               : success,
                                         ),
                                       ),
                                     ),
                                     onTap: () async {
-                                      if(row.flagGift == true) {
-                                        if(row.nightParty == false) {
-                                          showDropdownDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              fontTitleDialog,
-                                              fontRadio,
-                                              fontButtonDialog,
-                                              row.code
-                                          );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        } else {
-                                          errorDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              "คุณจับรางวัลไปแล้ว",
-                                              fontTitleDialog,
-                                              fontButtonDialog
-                                          );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        }
+                                      if(row.gift == '') {
+                                        showDropdownDialog(
+                                            screenHeight,
+                                            screenWidth,
+                                            fontTitleDialog,
+                                            fontRadio,
+                                            fontButtonDialog,
+                                            row.code
+                                        );
                                       } else {
-                                        if(row.nightParty == false) {
-                                          errorDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                              fontTitleDialog,
-                                              fontButtonDialog
-                                          );
-                                          await EmployeeService.nightPartyEmployee(row.code);
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        } else {
-                                          errorDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              "คุณจับรางวัลไปแล้ว",
-                                              fontTitleDialog,
-                                              fontButtonDialog
-                                          );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        }
+                                        errorDialog(
+                                            screenHeight,
+                                            screenWidth,
+                                            "คุณจับรางวัลไปแล้ว",
+                                            fontTitleDialog,
+                                            fontButtonDialog
+                                        );
                                       }
                                     },
                                   ),
@@ -1113,7 +991,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20, bottom: 5),
                             child: Text(
-                              "ลงทะเบียนแล้ว $registerBanglen / ${lengthOfficeBanglen.length} คน",
+                              "ลงทะเบียนแล้ว $registerBanglen / ${listOfficeBanglen.length} คน",
                               style: TextStyle(
                                   fontSize: fontSubTitle,
                                   fontWeight: FontWeight.w500),
@@ -1261,7 +1139,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                 ),
                               ),
                             ],
-                            rows: officeBanglen.map((row) {
+                            rows: lengthOfficeBanglen.map((row) {
                               bool isHighlighted =
                                   searchedEmployeeCode ==
                                       row.code;
@@ -1274,25 +1152,24 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                       : Colors.transparent,
                                 ),
                                 cells: <DataCell>[
-                                  DataCell(InkWell(
-                                    child: Center(
-                                      child: Text(
-                                        row.nightParty ==
-                                            false
-                                            ? 'ลงทะเบียน'
-                                            : 'เสร็จสิ้น',
-                                        style: TextStyle(
-                                            fontSize:
-                                            fontData,
-                                            color: row.nightParty ==
-                                                false
+                                  DataCell(
+                                    InkWell(
+                                      child: Center(
+                                        child: Text(
+                                          row.gift == ''
+                                              ? 'บันทึก'
+                                              : 'เสร็จสิ้น',
+                                          style: TextStyle(
+                                            fontSize: fontData,
+                                            color:
+                                            row.gift == ''
                                                 ? dataButton
-                                                : success),
+                                                : success,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    onTap: () async {
-                                      if(row.flagGift == true) {
-                                        if(row.nightParty == false) {
+                                      onTap: () async {
+                                        if(row.gift == '') {
                                           showDropdownDialog(
                                               screenHeight,
                                               screenWidth,
@@ -1301,9 +1178,6 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                               fontButtonDialog,
                                               row.code
                                           );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
                                         } else {
                                           errorDialog(
                                               screenHeight,
@@ -1312,38 +1186,10 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                                               fontTitleDialog,
                                               fontButtonDialog
                                           );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
                                         }
-                                      } else {
-                                        if(row.nightParty == false) {
-                                          errorDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                              fontTitleDialog,
-                                              fontButtonDialog
-                                          );
-                                          await EmployeeService.nightPartyEmployee(row.code);
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        } else {
-                                          errorDialog(
-                                              screenHeight,
-                                              screenWidth,
-                                              "คุณจับรางวัลไปแล้ว",
-                                              fontTitleDialog,
-                                              fontButtonDialog
-                                          );
-                                          employeeCode.clear();
-                                          barcode.clear();
-                                          barcodeFocus.requestFocus();
-                                        }
-                                      }
-                                    },
-                                  )),
+                                      },
+                                    ),
+                                  ),
                                   DataCell(Center(
                                     child: Text(
                                       row.code,
