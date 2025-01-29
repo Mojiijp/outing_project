@@ -80,7 +80,7 @@ class _HomescreenState extends State<Homescreen> {
                   primary: false,
                   padding: const EdgeInsets.all(15),
                   crossAxisSpacing: 20,
-                  mainAxisSpacing: screenHeight / 30,
+                  mainAxisSpacing: screenHeight / 40,
                   crossAxisCount: 2,
                   children: <Widget>[
                     gridViewDetail(
@@ -137,7 +137,7 @@ class _HomescreenState extends State<Homescreen> {
                 )
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(top: 15),
                 child: ButtonWidget(
                   height: screenHeight / 13,
                   width: screenWidth / 2,
