@@ -797,11 +797,11 @@ class _MoreScreenState extends State<MoreScreen> {
                                   if (selectedCarData.isEmpty) {
                                     return [
                                       DataRow(cells: [
-                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('            ', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('            ', style: TextStyle(fontSize: fontData))),
                                         DataCell(Text('ไม่พบข้อมูล', style: TextStyle(fontSize: fontData, color: buttonClose))),
-                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
-                                        DataCell(Text('', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('            ', style: TextStyle(fontSize: fontData))),
+                                        DataCell(Text('            ', style: TextStyle(fontSize: fontData))),
                                         // คุณสามารถเพิ่ม DataCell อื่นๆ ในที่นี้ได้ตามต้องการ
                                       ])
                                     ];

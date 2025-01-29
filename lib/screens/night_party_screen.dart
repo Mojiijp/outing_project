@@ -1020,6 +1020,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              await EmployeeService.nightPartyEmployee(row.code);
                                               employeeCode.clear();
                                               barcode.clear();
                                               barcodeFocus.requestFocus();
@@ -1324,6 +1325,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              await EmployeeService.nightPartyEmployee(row.code);
                                               employeeCode.clear();
                                               barcode.clear();
                                               barcodeFocus.requestFocus();
