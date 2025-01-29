@@ -52,11 +52,11 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = data.where((employee) => employee.boat == '1').toList();
+          boat1 = data.where((employee) => employee.boat == 'JP4').toList();
           break;
 
         case 'boat2':
-          boat2 = data.where((employee) => employee.boat == '2').toList();
+          boat2 = data.where((employee) => employee.boat == 'JP5').toList();
           break;
 
         // case 'car3':
@@ -80,11 +80,11 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = filteredData.where((employee) => employee.boat == '1').toList();
+          boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
           break;
 
         case 'boat2':
-          boat2 = filteredData.where((employee) => employee.boat == '2').toList();
+          boat2 = filteredData.where((employee) => employee.boat == 'JP5').toList();
           break;
 
         // case 'car3':
@@ -95,7 +95,7 @@ class _MoreScreenState extends State<MoreScreen> {
         //   car4 = filteredData.where((employee) => employee.boat == 'Mini Bus').toList();
         //   break;
 
-        default: boat1 = filteredData.where((employee) => employee.boat == '1').toList();
+        default: boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
       }
     });
   }
@@ -103,15 +103,15 @@ class _MoreScreenState extends State<MoreScreen> {
   String getCarNoFromUsername(String username) {
     switch(username) {
       case 'boat1':
-        return '1';  // Example car number for 'boat1'
+        return 'JP4';  // Example car number for 'boat1'
       case 'boat2':
-        return '2';  // Example car number for 'boat2'
+        return 'JP5';  // Example car number for 'boat2'
       // case 'car3':
       //   return 'คันที่ 3';
       // case 'car4':
       //   return 'Mini Bus';  // Example car number for 'car3'
       default:
-        return '1'; // Return 'Unknown' if username doesn't match any case
+        return 'JP4'; // Return 'Unknown' if username doesn't match any case
     }
   }
 
@@ -126,9 +126,9 @@ class _MoreScreenState extends State<MoreScreen> {
 
     switch (username.text) {
       case 'boat1':
-        return filteredData!.where((register) => register.boat == '1').length;
+        return filteredData!.where((register) => register.boat == 'JP4').length;
       case 'boat2':
-        return filteredData!.where((register) => register.boat == '2').length;
+        return filteredData!.where((register) => register.boat == 'JP5').length;
       // case 'car3':
       //   return filteredData!.where((register) => register.boat == 'คันที่ 3').length;
       // case 'car4':
@@ -144,15 +144,15 @@ class _MoreScreenState extends State<MoreScreen> {
     }
     switch (username.text) {
       case 'boat1':
-        return employeeData!.where((register) => register.boat == '1').length;
+        return employeeData!.where((register) => register.boat == 'JP4').length;
       case 'boat2':
-        return employeeData!.where((register) => register.boat == '2').length;
+        return employeeData!.where((register) => register.boat == 'JP5').length;
       // case 'car3':
       //   return employeeData!.where((register) => register.boat == 'คันที่ 3').length;
       // case 'car4':
       //   return employeeData!.where((register) => register.boat == 'Mini Bus').length;
       default:
-        return employeeData!.where((register) => register.boat == '1').length; // Return 0 if the username doesn't match any car
+        return employeeData!.where((register) => register.boat == 'JP4').length; // Return 0 if the username doesn't match any car
     }
   }
 
@@ -166,11 +166,11 @@ class _MoreScreenState extends State<MoreScreen> {
 
       switch (username.text) {
         case 'boat1':
-          boat1 = filteredData.where((employee) => employee.boat == '1').toList();
+          boat1 = filteredData.where((employee) => employee.boat == 'JP4').toList();
           break;
 
         case 'boat2':
-          boat2 = filteredData.where((employee) => employee.boat == '2').toList();
+          boat2 = filteredData.where((employee) => employee.boat == 'JP5').toList();
           break;
 
         // case 'car3':
@@ -258,12 +258,13 @@ class _MoreScreenState extends State<MoreScreen> {
     double fontSubTitle = screenWidth * 0.035;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.03;
+    double fontData = screenWidth * 0.025;
     double fontTitleDialog = screenWidth * 0.06;
     double fontButtonDialog = screenWidth * 0.05;
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: background,
         appBar: AppBar(
           backgroundColor: backgroundAppbar,
@@ -590,6 +591,8 @@ class _MoreScreenState extends State<MoreScreen> {
                     children: [
                       //data car
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(10),
@@ -607,6 +610,26 @@ class _MoreScreenState extends State<MoreScreen> {
                                 "ปิดรอบแล้ว",
                                 style: TextStyle(
                                     fontSize: fontTitle, fontWeight: FontWeight.bold, color: dataButton),
+                              ),
+                            ),
+                          ),
+                          Tooltip(
+                            message: 'รีเฟรชข้อมูล',
+                            child: InkWell(
+                              onTap: () {
+                                fetchEmployeeData();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                          "รีเฟรชข้อมูลสำเร็จ",
+                                          style: TextStyle(fontSize: fontInputText),
+                                        )
+                                    )
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
                               ),
                             ),
                           ),
@@ -812,6 +835,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                                 });
                                                 employeeCode.clear();
                                                 barcode.clear();
+                                                barcodeFocus.requestFocus();
                                                 // Handle your onTap logic here
                                               },
                                             ),

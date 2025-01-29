@@ -152,10 +152,11 @@ class _OutingScreenState extends State<OutingScreen> {
     double fontSubTitle = screenWidth * 0.035;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.03;
+    double fontData = screenWidth * 0.025;
 
     return SafeArea(
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: background,
           appBar: AppBar(
             backgroundColor: backgroundAppbar,
@@ -694,6 +695,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                             fetchEmployeeData();
                                             employeeCode.clear();
                                             name.clear();
+                                            employeeCodeFocus.requestFocus();
                                           },
                                         ),
                                       ),
@@ -933,6 +935,7 @@ class _OutingScreenState extends State<OutingScreen> {
                                                       fetchEmployeeData();
                                                       employeeCode.clear();
                                                       name.clear();
+                                                      employeeCodeFocus.requestFocus();
                                                     },
                                                   )),
                                                   DataCell(Center(

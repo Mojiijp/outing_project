@@ -36,6 +36,7 @@ class _HomescreenState extends State<Homescreen> {
       child: PopScope(
         canPop: false,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: background,
           body: Column(
             children: [

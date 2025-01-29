@@ -260,12 +260,13 @@ class _CheckInScreenState extends State<CheckInScreen> {
     double fontTitle = screenWidth * 0.04;
     double fontSubTitle = screenWidth * 0.035;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.03;
+    double fontData = screenWidth * 0.028;
     double fontTitleDialog = screenWidth * 0.06;
     double fontButtonDialog = screenWidth * 0.05;
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: background,
         appBar: AppBar(
           backgroundColor: backgroundAppbar,
@@ -592,6 +593,8 @@ class _CheckInScreenState extends State<CheckInScreen> {
                   children: [
                     //data car
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(10),
@@ -609,6 +612,26 @@ class _CheckInScreenState extends State<CheckInScreen> {
                               "ปิดรอบแล้ว",
                               style: TextStyle(
                                   fontSize: fontTitle, fontWeight: FontWeight.bold, color: dataButton),
+                            ),
+                          ),
+                        ),
+                        Tooltip(
+                          message: 'รีเฟรชข้อมูล',
+                          child: InkWell(
+                            onTap: () {
+                              fetchEmployeeData();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                        "รีเฟรชข้อมูลสำเร็จ",
+                                        style: TextStyle(fontSize: fontInputText),
+                                      )
+                                  )
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Icon(Icons.refresh, size: 30, color : Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -814,6 +837,7 @@ class _CheckInScreenState extends State<CheckInScreen> {
                                               });
                                               employeeCode.clear();
                                               barcode.clear();
+                                              barcodeFocus.requestFocus();
                                               // Handle your onTap logic here
                                             },
                                           ),

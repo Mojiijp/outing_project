@@ -41,6 +41,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
   int registerTalingchan = 0;
   int registerBanglen = 0;
   bool isLoading = true;
+  bool isCheckGift = false;
 
 
   void fetchEmployeeData() async {
@@ -184,6 +185,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
+                        fetchEmployeeData();
                       },
                       child: Text(
                           "ตกลง",
@@ -232,7 +234,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                       ),
                       ///dropdown
                       SizedBox(
-                        height: screenHeight / 4,
+                        height: screenHeight / 4.5,
                         width: screenWidth / 2,
                         child: Column(
                           children: <Widget>[
@@ -281,21 +283,41 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                           ],
                         ),
                       ),
+                      Visibility(
+                        visible: isCheckGift,
+                        child: Text(
+                          "กรุณาเลือกของรางวัล",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                              fontSize: fontRadio
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                       ///button
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromRGBO(34, 148, 65, 1),
                           ),
                           onPressed: () async {
-                            await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
-                            if(mounted) {
-                              character = null;
-                              fetchEmployeeData();
-                              employeeCode.clear();
-                              name.clear();
+                            if(selectedGiftValue == '' || selectedGiftValue!.isEmpty || selectedGiftValue == null || character == null) {
+                              setState(() {
+                                isCheckGift = true;
+                              });
+                            } else {
+                              await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
+                              await EmployeeService.nightPartyEmployee(code);
+                              if(mounted) {
+                                character = null;
+                                fetchEmployeeData();
+                                employeeCode.clear();
+                                barcode.clear();
+                                selectedGiftValue = '';
+                                isCheckGift = false;
+                              }
+                              Navigator.pop(context);
                             }
-                            Navigator.pop(context);
-
                           },
                           child: Text(
                               "ตกลง",
@@ -321,6 +343,8 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     // TODO: implement initState
     super.initState();
     fetchEmployeeData();
+    employeeCode.clear();
+    barcode.clear();
   }
 
 
@@ -334,12 +358,13 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     double fontRadio = screenWidth * 0.045;
     double fontDropdown = screenWidth * 0.03;
     double fontInputText = screenWidth * 0.03;
-    double fontData = screenWidth * 0.03;
+    double fontData = screenWidth * 0.025;
     double fontTitleDialog = screenWidth * 0.06;
     double fontButtonDialog = screenWidth * 0.05;
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: background,
         appBar: AppBar(
           backgroundColor: backgroundAppbar,
@@ -397,7 +422,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                   ],
                                 ),
                                 SizedBox(
-                                  width: screenWidth / 4.5,
+                                  width: screenWidth / 3,
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton2<String>(
                                       isExpanded: true,
@@ -513,7 +538,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                 ),
                                 SizedBox(
                                   height: screenHeight / 20,
-                                  width: screenWidth / 2.4,
+                                  width: screenWidth / 1.8,
                                   child: SearchField(
                                     readOnly: false,
                                     controller: employeeCode,
@@ -529,26 +554,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                 ),
                               ],
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  '',
-                                  style: TextStyle(fontSize: fontSubTitle),
-                                ),
-                                ButtonWidget(
-                                  height: screenHeight / 20,
-                                  width: screenWidth / 4.5,
-                                  text: 'ค้นหา',
-                                  colorText: Colors.white,
-                                  colorButton: saveButton,
-                                  fontTextSize: fontSubTitle,
-                                  onPressed: () async {
-                                    employeeCode.clear();
-                                    barcode.clear();
-                                  },
-                                ),
-                              ],
-                            )
                           ],
                         ),
                         Row(
@@ -643,95 +648,115 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                               ],
                             ),
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "",
-                                  style: TextStyle(
-                                      fontSize: fontSubTitle,
-                                      fontWeight: FontWeight.w500),
+                                  '',
+                                  style: TextStyle(fontSize: fontSubTitle),
                                 ),
-                                CircleAvatar(
-                                  backgroundColor: buttonAdd,
-                                  foregroundColor: buttonAdd,
-                                  radius: 20,
-                                  child: Tooltip(
-                                    message: 'เพิ่มรอบใหม่',
-                                    child: IconButton(
-                                        onPressed: () async {
-                                          if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
-                                            alertDialog(
-                                                screenHeight,
-                                                screenWidth,
-                                                'ไม่สามารถเพิ่มรอบใหม่ได้\n ยังไม่ได้ปิดรอบ',
-                                                fontTitleDialog,
-                                                fontButtonDialog
-                                            );
-                                          } else {
-                                            await EmployeeService.closeNightPartyEmployee();
-                                            fetchEmployeeData();
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                    content: Text(
-                                                      "เพิ่มรอบสำเร็จ",
-                                                      style: TextStyle(fontSize: fontInputText),
-                                                    )
-                                                )
-                                            );
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: Colors.black,
-                                        )),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "",
-                                  style: TextStyle(
-                                      fontSize: fontSubTitle,
-                                      fontWeight: FontWeight.w500),
+                                ButtonWidget(
+                                  height: screenHeight / 20,
+                                  width: screenWidth / 4.5,
+                                  text: 'ค้นหา',
+                                  colorText: Colors.white,
+                                  colorButton: saveButton,
+                                  fontTextSize: fontSubTitle,
+                                  onPressed: () async {
+                                    employeeCode.clear();
+                                    barcode.clear();
+                                  },
                                 ),
-                                CircleAvatar(
-                                  backgroundColor: buttonClose,
-                                  foregroundColor: buttonClose,
-                                  radius: 20,
-                                  child: Tooltip(
-                                    message: 'ปิดรอบ',
-                                    child: IconButton(
-                                        onPressed: () async {
-                                          if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
-                                            alertDialog(
-                                                screenHeight,
-                                                screenWidth,
-                                                'ไม่สามารถปิดรอบได้\n ยังมีคนเช็คอินไม่ครบ',
-                                                fontTitleDialog,
-                                                fontButtonDialog
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                    content: Text(
-                                                      "ปิดรอบสำเร็จ",
-                                                      style: TextStyle(fontSize: fontInputText),
-                                                    )
-                                                )
-                                            );
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.close_rounded,
-                                          color: Colors.black,
-                                        )),
-                                  ),
-                                )
                               ],
-                            ),
+                            )
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     Text(
+                            //       "",
+                            //       style: TextStyle(
+                            //           fontSize: fontSubTitle,
+                            //           fontWeight: FontWeight.w500),
+                            //     ),
+                            //     CircleAvatar(
+                            //       backgroundColor: buttonAdd,
+                            //       foregroundColor: buttonAdd,
+                            //       radius: 20,
+                            //       child: Tooltip(
+                            //         message: 'เพิ่มรอบใหม่',
+                            //         child: IconButton(
+                            //             onPressed: () async {
+                            //               if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
+                            //                 alertDialog(
+                            //                     screenHeight,
+                            //                     screenWidth,
+                            //                     'ไม่สามารถเพิ่มรอบใหม่ได้\n ยังไม่ได้ปิดรอบ',
+                            //                     fontTitleDialog,
+                            //                     fontButtonDialog
+                            //                 );
+                            //               } else {
+                            //                 await EmployeeService.closeNightPartyEmployee();
+                            //                 fetchEmployeeData();
+                            //                 ScaffoldMessenger.of(context).showSnackBar(
+                            //                     SnackBar(
+                            //                         content: Text(
+                            //                           "เพิ่มรอบสำเร็จ",
+                            //                           style: TextStyle(fontSize: fontInputText),
+                            //                         )
+                            //                     )
+                            //                 );
+                            //               }
+                            //             },
+                            //             icon: Icon(
+                            //               Icons.add_circle,
+                            //               color: Colors.black,
+                            //             )),
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     Text(
+                            //       "",
+                            //       style: TextStyle(
+                            //           fontSize: fontSubTitle,
+                            //           fontWeight: FontWeight.w500),
+                            //     ),
+                            //     CircleAvatar(
+                            //       backgroundColor: buttonClose,
+                            //       foregroundColor: buttonClose,
+                            //       radius: 20,
+                            //       child: Tooltip(
+                            //         message: 'ปิดรอบ',
+                            //         child: IconButton(
+                            //             onPressed: () async {
+                            //               if((registerTalingchan != lengthOfficeTaLingChan.length) && (registerBanglen != lengthOfficeBanglen.length)) {
+                            //                 alertDialog(
+                            //                     screenHeight,
+                            //                     screenWidth,
+                            //                     'ไม่สามารถปิดรอบได้\n ยังมีคนเช็คอินไม่ครบ',
+                            //                     fontTitleDialog,
+                            //                     fontButtonDialog
+                            //                 );
+                            //               } else {
+                            //                 ScaffoldMessenger.of(context).showSnackBar(
+                            //                     SnackBar(
+                            //                         content: Text(
+                            //                           "ปิดรอบสำเร็จ",
+                            //                           style: TextStyle(fontSize: fontInputText),
+                            //                         )
+                            //                     )
+                            //                 );
+                            //               }
+                            //             },
+                            //             icon: Icon(
+                            //               Icons.close_rounded,
+                            //               color: Colors.black,
+                            //             )),
+                            //       ),
+                            //     )
+                            //   ],
+                            // ),
                           ],
                         )
                       ],
@@ -971,12 +996,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontButtonDialog,
                                                   row.code
                                               );
-                                              await EmployeeService
-                                                  .nightPartyEmployee(
-                                                  row.code);
-                                              fetchEmployeeData();
                                               employeeCode.clear();
-                                              name.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             } else {
                                               errorDialog(
                                                   screenHeight,
@@ -985,6 +1007,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              employeeCode.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             }
                                           } else {
                                             if(row.nightParty == false) {
@@ -995,12 +1020,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
-                                              await EmployeeService
-                                                  .nightPartyEmployee(
-                                                  row.code);
-                                              fetchEmployeeData();
                                               employeeCode.clear();
-                                              name.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             } else {
                                               errorDialog(
                                                   screenHeight,
@@ -1009,6 +1031,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              employeeCode.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             }
                                           }
                                         },
@@ -1275,12 +1300,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontButtonDialog,
                                                   row.code
                                               );
-                                              await EmployeeService
-                                                  .nightPartyEmployee(
-                                                  row.code);
-                                              fetchEmployeeData();
                                               employeeCode.clear();
-                                              name.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             } else {
                                               errorDialog(
                                                   screenHeight,
@@ -1289,6 +1311,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              employeeCode.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             }
                                           } else {
                                             if(row.nightParty == false) {
@@ -1299,12 +1324,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
-                                              await EmployeeService
-                                                  .nightPartyEmployee(
-                                                  row.code);
-                                              fetchEmployeeData();
                                               employeeCode.clear();
-                                              name.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             } else {
                                               errorDialog(
                                                   screenHeight,
@@ -1313,6 +1335,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                   fontTitleDialog,
                                                   fontButtonDialog
                                               );
+                                              employeeCode.clear();
+                                              barcode.clear();
+                                              barcodeFocus.requestFocus();
                                             }
                                           }
                                         },
