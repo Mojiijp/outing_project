@@ -5,6 +5,7 @@ import 'package:outing_project/screens/login_screen.dart';
 import 'package:outing_project/screens/more_screen.dart';
 import 'package:outing_project/screens/night_party_screen.dart';
 import 'package:outing_project/screens/outing_screen.dart';
+import 'package:outing_project/screens/save_gift.dart';
 
 class Routes {
   static const loginScreen = "/login";
@@ -13,6 +14,7 @@ class Routes {
   static const checkInScreen = "/check-in";
   static const nightPartyScreen = "/night-party";
   static const moreScreen = "/more";
+  static const saveGift = "/save-gift";
 
   static List<GetPage> getPageRoutes() {
     return [
@@ -22,6 +24,7 @@ class Routes {
       GetPage(name: checkInScreen, page: () => const CheckInScreen()),
       GetPage(name: nightPartyScreen, page: () => const NightPartyScreen()),
       GetPage(name: moreScreen, page: () => const MoreScreen()),
+      GetPage(name: saveGift, page: () => const SaveGiftScreen()),
     ];
   }
 }

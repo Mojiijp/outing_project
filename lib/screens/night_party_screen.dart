@@ -103,6 +103,58 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     });
   }
 
+  void errorDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            elevation: 0,
+            backgroundColor: buttonCamera,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            child: SizedBox(
+              height: screenHeight / 3,
+              width: screenWidth / 1.2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: fontTitleSize
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black
+                        //RGB = (34, 148, 65)
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        fetchEmployeeData();
+                        barcodeFocus.requestFocus();
+                      },
+                      child: Text(
+                          "ตกลง",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: fontButtonSize
+                          )
+                      )
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void alertDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
     showDialog(
       barrierDismissible: false,
@@ -148,191 +200,6 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void errorDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return PopScope(
-          canPop: false,
-          child: Dialog(
-            elevation: 0,
-            backgroundColor: buttonCamera,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-            child: SizedBox(
-              height: screenHeight / 3,
-              width: screenWidth / 1.2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    text,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: fontTitleSize
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black
-                        //RGB = (34, 148, 65)
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        fetchEmployeeData();
-                      },
-                      child: Text(
-                          "ตกลง",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: fontButtonSize
-                          )
-                      )
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void showDropdownDialog(double screenHeight, double screenWidth, double fontTitleText, double fontRadio, double fontButton, String code) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) setState) {
-            return PopScope(
-              canPop: false,
-              child: Dialog(
-                elevation: 0,
-                backgroundColor: Colors.green[200],
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                child: SizedBox(
-                  height: screenHeight / 2,
-                  width: screenWidth / 1.2,
-                  child : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ///Title
-                      Text(
-                        "กรุณาเลือกกลุ่มของรางวัล",
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w600,
-                            fontSize: fontTitleText
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      ///dropdown
-                      SizedBox(
-                        height: screenHeight / 4.5,
-                        width: screenWidth / 2,
-                        child: Column(
-                          children: <Widget>[
-                            ListTile(
-                              title: Text('1000 บาท', style: TextStyle(fontSize: fontRadio)),
-                              leading: Radio<GiftRadio>(
-                                value: GiftRadio.thousand,
-                                groupValue: character,
-                                onChanged: (GiftRadio? value) {
-                                  setState(() {
-                                    character = value;
-                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
-                                    print('Selected value: $selectedGiftValue');
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              title: Text('800 บาท', style: TextStyle(fontSize: fontRadio)),
-                              leading: Radio<GiftRadio>(
-                                value: GiftRadio.eightHundred,
-                                groupValue: character,
-                                onChanged: (GiftRadio? value) {
-                                  setState(() {
-                                    character = value;
-                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
-                                    print('Selected value: $selectedGiftValue');
-                                  });
-                                },
-                              ),
-                            ),
-                            ListTile(
-                              title: Text('500 บาท', style: TextStyle(fontSize: fontRadio)),
-                              leading: Radio<GiftRadio>(
-                                value: GiftRadio.fiveHundred,
-                                groupValue: character,
-                                onChanged: (GiftRadio? value) {
-                                  setState(() {
-                                    character = value;
-                                    selectedGiftValue = giftValues[character]; // เก็บค่าเป็นตัวเลข
-                                    print('Selected value: $selectedGiftValue');
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: isCheckGift,
-                        child: Text(
-                          "กรุณาเลือกของรางวัล",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                              fontSize: fontRadio
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      ///button
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromRGBO(34, 148, 65, 1),
-                          ),
-                          onPressed: () async {
-                            if(selectedGiftValue == '' || selectedGiftValue!.isEmpty || selectedGiftValue == null || character == null) {
-                              setState(() {
-                                isCheckGift = true;
-                              });
-                            } else {
-                              await EmployeeService.addGiftEmployee(selectedGiftValue!, code);
-                              await EmployeeService.nightPartyEmployee(code);
-                              if(mounted) {
-                                character = null;
-                                fetchEmployeeData();
-                                employeeCode.clear();
-                                barcode.clear();
-                                selectedGiftValue = '';
-                                isCheckGift = false;
-                              }
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Text(
-                              "ตกลง",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: fontButton
-                              )
-                          )
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
         );
       },
     );
@@ -987,55 +854,21 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                         ),
                                         onTap: () async {
                                           if(row.flagGift == true) {
-                                            if(row.nightParty == false) {
-                                              showDropdownDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  fontTitleDialog,
-                                                  fontRadio,
-                                                  fontButtonDialog,
-                                                  row.code
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            } else {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณจับรางวัลไปแล้ว",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            }
+                                            await EmployeeService.nightPartyEmployee(row.code);
+                                            fetchEmployeeData();
+                                            employeeCode.clear();
+                                            barcode.clear();
+                                            barcodeFocus.requestFocus();
                                           } else {
-                                            if(row.nightParty == false) {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              await EmployeeService.nightPartyEmployee(row.code);
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            } else {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณจับรางวัลไปแล้ว",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            }
+                                            errorDialog(
+                                                screenHeight,
+                                                screenWidth,
+                                                "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                                fontTitleDialog,
+                                                fontButtonDialog
+                                            );
+                                            employeeCode.clear();
+                                            barcode.clear();
                                           }
                                         },
                                       ),
@@ -1292,55 +1125,21 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                         ),
                                         onTap: () async {
                                           if(row.flagGift == true) {
-                                            if(row.nightParty == false) {
-                                              showDropdownDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  fontTitleDialog,
-                                                  fontRadio,
-                                                  fontButtonDialog,
-                                                  row.code
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            } else {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณจับรางวัลไปแล้ว",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            }
+                                            await EmployeeService.nightPartyEmployee(row.code);
+                                            fetchEmployeeData();
+                                            employeeCode.clear();
+                                            barcode.clear();
+                                            barcodeFocus.requestFocus();
                                           } else {
-                                            if(row.nightParty == false) {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              await EmployeeService.nightPartyEmployee(row.code);
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            } else {
-                                              errorDialog(
-                                                  screenHeight,
-                                                  screenWidth,
-                                                  "คุณจับรางวัลไปแล้ว",
-                                                  fontTitleDialog,
-                                                  fontButtonDialog
-                                              );
-                                              employeeCode.clear();
-                                              barcode.clear();
-                                              barcodeFocus.requestFocus();
-                                            }
+                                            errorDialog(
+                                                screenHeight,
+                                                screenWidth,
+                                                "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                                fontTitleDialog,
+                                                fontButtonDialog
+                                            );
+                                            employeeCode.clear();
+                                            barcode.clear();
                                           }
                                         },
                                       )),

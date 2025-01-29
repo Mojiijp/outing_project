@@ -307,7 +307,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        "เรือลำที่",
+                                        "เรือ",
                                         style: TextStyle(
                                             fontSize: fontSubTitle,
                                             fontWeight: FontWeight.w500),
@@ -597,7 +597,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           Padding(
                             padding: const EdgeInsets.all(10),
                             child: Text(
-                              "เรือลำที่ ${getCarNoFromUsername(username.text)} (รอบที่ $countOfRound)",
+                              "เรือ ${getCarNoFromUsername(username.text)} (รอบที่ $countOfRound)",
                               style: TextStyle(
                                   fontSize: fontTitle, fontWeight: FontWeight.bold),
                             ),
@@ -783,12 +783,6 @@ class _MoreScreenState extends State<MoreScreen> {
                                     case 'boat2':
                                       selectedCarData = boat2;
                                       break;
-                                    // case 'car3':
-                                    //   selectedCarData = car3;
-                                    //   break;
-                                    // case 'car4':
-                                    //   selectedCarData = car4;
-                                    //   break;
                                     default:
                                       selectedCarData = []; // Return an empty list if no match
                                   }
