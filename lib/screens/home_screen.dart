@@ -72,10 +72,10 @@ class _HomescreenState extends State<Homescreen> {
                   ],
                 ),
               ),
-              SizedBox(height: screenHeight / 30),
+              // SizedBox(height: screenHeight / 30),
               SizedBox(
                 width: screenWidth,
-                height: screenHeight / 1.5,
+                height: screenHeight / 1.38,
                 child: GridView.count(
                   primary: false,
                   padding: const EdgeInsets.all(15),
@@ -117,17 +117,27 @@ class _HomescreenState extends State<Homescreen> {
                       screenHeight,
                       screenWidth,
                       'assets/images/ship.png',
-                      'check in ขึ้นเรือ',
+                      'check in ลงเรือ',
                       fontTextGrid,
                       () {
                         Get.toNamed('/more');
                       }
                     ),
+                    gridViewDetail(
+                        screenHeight,
+                        screenWidth,
+                        'assets/images/gift-card.png',
+                        'บันทึกรางวัล',
+                        fontTextGrid,
+                            () {
+                          Get.toNamed('/save-gift');
+                        }
+                    ),
                   ],
                 )
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.only(top: 10),
                 child: ButtonWidget(
                   height: screenHeight / 13,
                   width: screenWidth / 2,
@@ -156,7 +166,7 @@ Widget gridViewDetail (double screenHeight, double screenWeight, String imagePat
         borderRadius: BorderRadius.circular(20),
         color: Color(0xFFBFECFF)
       ),
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
