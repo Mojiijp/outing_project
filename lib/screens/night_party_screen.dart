@@ -103,7 +103,7 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
     });
   }
 
-  void errorDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize) {
+  void errorDialog (double screenHeight, double screenWidth, String text, double fontTitleSize, double fontButtonSize, String code) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -133,8 +133,9 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                           backgroundColor: Colors.black
                         //RGB = (34, 148, 65)
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         Navigator.pop(context);
+                        await EmployeeService.nightPartyEmployee(code);
                         fetchEmployeeData();
                         barcodeFocus.requestFocus();
                       },
@@ -852,7 +853,8 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                                 screenWidth,
                                                 "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
                                                 fontTitleDialog,
-                                                fontButtonDialog
+                                                fontButtonDialog,
+                                              row.code
                                             );
                                             employeeCode.clear();
                                             barcode.clear();
@@ -1096,11 +1098,12 @@ class _NightPartyScreenState extends State<NightPartyScreen> {
                                             barcodeFocus.requestFocus();
                                           } else {
                                             errorDialog(
-                                                screenHeight,
-                                                screenWidth,
-                                                "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
-                                                fontTitleDialog,
-                                                fontButtonDialog
+                                              screenHeight,
+                                              screenWidth,
+                                              "คุณไม่มีสิทธิ์จับรางวัลหน้างาน",
+                                              fontTitleDialog,
+                                              fontButtonDialog,
+                                              row.code
                                             );
                                             employeeCode.clear();
                                             barcode.clear();

@@ -454,21 +454,9 @@ class _OutingScreenState extends State<OutingScreen> {
                                     colorButton: saveButton,
                                     fontTextSize: fontSubTitle,
                                     onPressed: () async {
-                                      if (selectedValue == null ||
-                                          selectedValue == '') {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              "กรุณาเลือกสำนักงาน",
-                                              style: TextStyle(
-                                                  fontSize: fontInputText),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
                                         searchEmployeeData();
-                                      }
+                                        employeeCode.clear();
+                                        name.clear();
                                     },
                                   ),
                                 ],

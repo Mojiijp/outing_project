@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-String version = 'Version 2.0.0';
+String version = 'Version 2.0.1';
 String txtBarcode = '';
 
 TextEditingController username = TextEditingController();

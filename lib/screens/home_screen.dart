@@ -42,13 +42,13 @@ class _HomescreenState extends State<Homescreen> {
             children: [
               Container(
                 width: screenWidth,
-                height: screenHeight / 9,
+                height: screenHeight / 8.5,
                 color: Colors.pink[200],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5, top : 10),
                       child: Text(
                         "ระบบลงทะเบียนร่วมงานบริษัท",
                         style: TextStyle(

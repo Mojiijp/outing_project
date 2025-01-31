@@ -96,7 +96,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
       officeBanglen = filteredData.where((employee) => employee.office == 'บางเลน').toList();
 
       lengthOfficeTaLingChan =  officeTaLingChan.where((employee) => employee.flagGift == true).toList();
-      lengthOfficeBanglen =  officeTaLingChan.where((employee) => employee.flagGift == true).toList();
+      lengthOfficeBanglen =  officeBanglen.where((employee) => employee.flagGift == true).toList();
 
       // ไฮไลต์แถวแรกที่ตรงกับผลการค้นหา
       if (filteredData.isNotEmpty) {
@@ -188,6 +188,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                         fetchEmployeeData();
+                        employeeCode.clear();
                         barcodeFocus.requestFocus();
                       },
                       child: Text(
@@ -220,7 +221,7 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                 backgroundColor: Colors.green[200],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 child: SizedBox(
-                  height: screenHeight / 2,
+                  height: screenHeight / 1.8,
                   width: screenWidth / 1.2,
                   child : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -237,9 +238,10 @@ class _SaveGiftScreenState extends State<SaveGiftScreen> {
                       ),
                       ///dropdown
                       SizedBox(
-                        height: screenHeight / 4.5,
+                        height: screenHeight / 3.5,
                         width: screenWidth / 2,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             ListTile(
                               title: Text('1000 บาท', style: TextStyle(fontSize: fontRadio)),
